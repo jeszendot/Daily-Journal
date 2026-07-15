@@ -1,5 +1,5 @@
 // ============================================
-// REAL-TIME DATA MANAGER
+/// REAL-TIME DATA MANAGER
 // ============================================
 
 const RealTimeManager = {
