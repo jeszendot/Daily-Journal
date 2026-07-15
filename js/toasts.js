@@ -1,5 +1,5 @@
 // ============================================
-// TOAST NOTIFICATION SYSTEM
+/// TOAST NOTIFICATION SYSTEM
 // ============================================
 
 const ToastManager = {
