@@ -24,3 +24,8 @@ Sortable results table — with pagination and export
 Toasts & modals — confirmation, detail, and alert-creation dialogs
 Responsive layout — collapsible sidebar and adapted layouts down to mobile
 Keyboard shortcut — opens quick search
+
+**Contributors**
+Princess Iris A. Gayos
+Alessandra Mae A. Perey
+MarkLee B. Olino
