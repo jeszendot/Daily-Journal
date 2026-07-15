@@ -1,5 +1,5 @@
 // ============================================
-// NOTIFICATION MANAGER - UPDATED FOR REAL-TIME
+/// NOTIFICATION MANAGER - UPDATED FOR REAL-TIME
 // ============================================
 
 const NewsManager = {
