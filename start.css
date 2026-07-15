@@ -1,0 +1,141 @@
+/* ============================================
+   START / SPLASH PAGE
+   Uses the shared blue token system defined in style.css (:root)
+   ============================================ */
+
+html, body.start-page {
+    height: 100%;
+}
+
+body.start-page {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 20% 20%, var(--primary-800) 0%, var(--primary-900) 45%, var(--gray-900) 100%);
+    overflow: hidden;
+    position: relative;
+}
+
+/* subtle ambient glow shapes */
+.start-page .glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: 0.35;
+}
+
+.start-page .glow.g1 {
+    width: 480px;
+    height: 480px;
+    background: var(--primary-400);
+    top: -120px;
+    left: -120px;
+}
+
+.start-page .glow.g2 {
+    width: 420px;
+    height: 420px;
+    background: var(--accent-cyan);
+    bottom: -140px;
+    right: -100px;
+}
+
+.start-card {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 0 24px;
+    animation: startFadeUp 0.8s ease forwards;
+}
+
+@keyframes startFadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.start-card .start-logo {
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 28px auto;
+    border-radius: 18px;
+    background: linear-gradient(135deg, var(--primary-400), var(--primary-600));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.start-card .start-eyebrow {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--primary-300);
+    margin-bottom: 16px;
+}
+
+.start-card h1 {
+    font-size: 42px;
+    font-weight: 800;
+    color: white;
+    letter-spacing: -0.5px;
+    margin-bottom: 14px;
+}
+
+.start-card p {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.65);
+    max-width: 420px;
+    margin: 0 auto 40px auto;
+    line-height: 1.7;
+}
+
+.start-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 40px;
+    background: white;
+    color: var(--primary-900);
+    border-radius: 999px;
+    font-size: 16px;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+    transition: var(--transition);
+}
+
+.start-btn:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 16px 34px rgba(0, 0, 0, 0.38);
+}
+
+.start-btn i {
+    transition: transform 0.25s ease;
+}
+
+.start-btn:hover i {
+    transform: translateX(4px);
+}
+
+.start-footer {
+    position: absolute;
+    bottom: 28px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.4);
+    z-index: 2;
+}
+
+@media (max-width: 480px) {
+    .start-card h1 {
+        font-size: 30px;
+    }
+}

@@ -1,0 +1,2505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search News - NewsFlow</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ============================================
+           CSS VARIABLES - BLUE THEME (EMBEDDED)
+           ============================================ */
+        :root {
+            --primary-50: #EFF5FC;
+            --primary-100: #DCE9F7;
+            --primary-200: #B7D2EF;
+            --primary-300: #86B2E2;
+            --primary-400: #5590D2;
+            --primary-500: #2F6FBB;
+            --primary-600: #1E5399;
+            --primary-700: #163E78;
+            --primary-800: #102C58;
+            --primary-900: #0B1F3F;
+
+            --accent-cyan: #0E7490;
+            --accent-cyan-bg: #E0F6FA;
+            --accent-indigo: #3F3F9E;
+            --accent-indigo-bg: #E7E7F7;
+            --accent-navy: #14335C;
+            --accent-navy-bg: #DDE6F1;
+
+            --success: #0F8A6B;
+            --success-bg: #DDF3EC;
+            --danger: #C0362C;
+            --danger-bg: #FBE6E4;
+            --warning: #B5750F;
+            --warning-bg: #FBF0DC;
+            --info: #2F6FBB;
+            --info-bg: #DCE9F7;
+
+            --gray-50: #F6F8FB;
+            --gray-100: #EEF2F7;
+            --gray-200: #E0E6EE;
+            --gray-300: #C7D0DC;
+            --gray-400: #93A1B4;
+            --gray-500: #64748F;
+            --gray-600: #47536A;
+            --gray-700: #303A4D;
+            --gray-800: #1B2436;
+            --gray-900: #0D1420;
+
+            --shadow: 0 1px 3px 0 rgba(11, 31, 63, 0.08);
+            --shadow-md: 0 4px 10px -2px rgba(11, 31, 63, 0.12);
+            --shadow-lg: 0 12px 24px -6px rgba(11, 31, 63, 0.16);
+            --shadow-xl: 0 22px 40px -8px rgba(11, 31, 63, 0.20);
+            --radius: 10px;
+            --radius-sm: 7px;
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ============================================
+           RESET & BASE
+           ============================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-800);
+            min-height: 100vh;
+        }
+
+        /* ============================================
+           APP LAYOUT
+           ============================================ */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ============================================
+           SIDEBAR
+           ============================================ */
+        .sidebar {
+            width: 280px;
+            background: white;
+            border-right: 1px solid var(--gray-200);
+            border-top: 3px solid var(--primary-800);
+            padding: 24px 16px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            overflow-y: auto;
+            z-index: 100;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 12px 24px 12px;
+            border-bottom: 1px solid var(--gray-200);
+            margin-bottom: 24px;
+        }
+
+        .sidebar-brand .logo {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, var(--primary-700), var(--primary-900));
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            box-shadow: 0 4px 12px rgba(11, 31, 63, 0.35);
+        }
+
+        .sidebar-brand .brand-text h1 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary-900);
+            letter-spacing: 0.2px;
+        }
+
+        .sidebar-brand .brand-text span {
+            color: var(--gray-500);
+            font-size: 11px;
+            display: block;
+            margin-top: -2px;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            flex: 1;
+        }
+
+        .sidebar-nav .nav-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--gray-400);
+            padding: 16px 12px 8px 12px;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: var(--radius-sm);
+            color: var(--gray-600);
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .sidebar-nav a:hover {
+            background: var(--primary-50);
+            color: var(--primary-700);
+        }
+
+        .sidebar-nav a.active {
+            background: var(--primary-50);
+            color: var(--primary-700);
+        }
+
+        .sidebar-nav a.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            bottom: 8px;
+            width: 3px;
+            background: var(--primary-600);
+            border-radius: 0 4px 4px 0;
+        }
+
+        .sidebar-nav a i {
+            width: 20px;
+            text-align: center;
+            font-size: 16px;
+            color: var(--gray-400);
+            transition: var(--transition);
+        }
+
+        .sidebar-nav a:hover i,
+        .sidebar-nav a.active i {
+            color: var(--primary-600);
+        }
+
+        .sidebar-nav a .badge {
+            margin-left: auto;
+            background: var(--danger);
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 10px;
+            border-radius: 20px;
+            line-height: 1.6;
+        }
+
+        .sidebar-nav a .badge.success {
+            background: var(--success);
+        }
+
+        .sidebar-footer {
+            padding-top: 24px;
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .sidebar-footer a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: var(--radius-sm);
+            color: var(--gray-500);
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .sidebar-footer a:hover {
+            background: var(--gray-50);
+            color: var(--gray-700);
+        }
+
+        .sidebar-footer a i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* ============================================
+           MAIN CONTENT
+           ============================================ */
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
+            padding: 24px 32px 32px 32px;
+        }
+
+        /* ============================================
+           TOP BAR
+           ============================================ */
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--gray-200);
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .topbar-left h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .topbar-left .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--gray-500);
+            font-size: 13px;
+        }
+
+        .topbar-left .breadcrumb a {
+            color: var(--primary-600);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .topbar-left .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .topbar-right .search-btn {
+            padding: 8px 16px;
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--gray-500);
+            font-size: 13px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .topbar-right .search-btn:hover {
+            border-color: var(--primary-400);
+            background: var(--primary-50);
+        }
+
+        .topbar-right .notification-bell {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border-radius: 50%;
+            border: 1px solid var(--gray-200);
+            color: var(--gray-600);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .topbar-right .notification-bell:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-300);
+            color: var(--primary-600);
+        }
+
+        .topbar-right .notification-bell .dot {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 8px;
+            height: 8px;
+            background: var(--danger);
+            border-radius: 50%;
+            border: 2px solid white;
+            animation: pulse-dot 2s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+        }
+
+        .topbar-right .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-900));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+
+        .topbar-right .user-avatar:hover {
+            border-color: var(--primary-300);
+            transform: scale(1.05);
+        }
+
+        .menu-toggle {
+            display: none;
+            width: 40px;
+            height: 40px;
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-sm);
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: var(--gray-600);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .menu-toggle:hover {
+            background: var(--gray-50);
+        }
+
+        .mobile-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.5);
+            z-index: 90;
+        }
+
+        .mobile-overlay.active {
+            display: block;
+        }
+
+        /* ============================================
+           SEARCH PAGE STYLES
+           ============================================ */
+        .search-hero {
+            background: linear-gradient(135deg, var(--primary-900), var(--primary-700));
+            padding: 40px 0;
+            border-radius: var(--radius);
+            margin-bottom: 32px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .search-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 400px;
+            height: 400px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+        }
+        .search-hero::after {
+            content: '';
+            position: absolute;
+            bottom: -40%;
+            left: -10%;
+            width: 300px;
+            height: 300px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 50%;
+        }
+        .search-hero h1 {
+            color: white;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+        .search-hero p {
+            color: rgba(255,255,255,0.7);
+            font-size: 16px;
+            position: relative;
+            z-index: 1;
+        }
+        .search-hero .search-bar-large {
+            max-width: 700px;
+            margin: 20px auto 0;
+            position: relative;
+            z-index: 1;
+        }
+        .search-hero .search-bar-large input {
+            padding: 16px 20px 16px 50px;
+            font-size: 16px;
+            border-radius: 50px;
+            width: 100%;
+            border: none;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+            background: white;
+            color: var(--gray-800);
+            transition: var(--transition);
+        }
+        .search-hero .search-bar-large input:focus {
+            outline: none;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.3);
+            transform: scale(1.02);
+        }
+        .search-hero .search-bar-large i {
+            left: 20px;
+            font-size: 18px;
+            color: var(--gray-400);
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .search-hero .search-bar-large .search-input-wrapper {
+            position: relative;
+        }
+
+        .search-filters-advanced {
+            background: white;
+            padding: 24px;
+            border-radius: var(--radius);
+            border: 1px solid var(--gray-200);
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        .search-filters-advanced:hover {
+            box-shadow: var(--shadow-md);
+        }
+        .search-filters-advanced .filter-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+        }
+        .search-filters-advanced label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gray-600);
+            display: block;
+            margin-bottom: 4px;
+        }
+        .search-filters-advanced label i {
+            color: var(--primary-500);
+            margin-right: 4px;
+        }
+        .search-filters-advanced select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            background: var(--gray-50);
+            transition: var(--transition);
+            color: var(--gray-700);
+            cursor: pointer;
+        }
+        .search-filters-advanced select:focus {
+            outline: none;
+            border-color: var(--primary-400);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(30, 83, 153, 0.12);
+        }
+        .search-filters-advanced .filter-actions {
+            margin-top: 16px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-btn {
+            padding: 10px 24px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+        .filter-btn.primary {
+            background: var(--primary-600);
+            color: white;
+        }
+        .filter-btn.primary:hover {
+            background: var(--primary-700);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        .filter-btn.outline {
+            background: transparent;
+            color: var(--gray-600);
+            border: 1px solid var(--gray-200);
+        }
+        .filter-btn.outline:hover {
+            background: var(--gray-50);
+            border-color: var(--gray-300);
+        }
+        .filter-info {
+            color: var(--gray-400);
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .search-results-grid {
+            display: grid;
+            gap: 16px;
+        }
+        .search-results-grid.grid-view {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 16px;
+        }
+        .search-results-grid.grid-view .search-result-item {
+            display: flex;
+            flex-direction: column;
+        }
+        .search-results-grid.grid-view .search-result-item .result-actions {
+            margin-top: auto;
+        }
+
+        .search-result-item {
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        .search-result-item:hover {
+            border-color: var(--primary-300);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+        .search-result-item .result-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 6px;
+        }
+        .search-result-item .result-title .breaking-icon {
+            color: var(--danger);
+            margin-right: 6px;
+            animation: pulse-dot 1.5s infinite;
+        }
+        .search-result-item .result-meta {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            font-size: 13px;
+            color: var(--gray-500);
+            margin-bottom: 8px;
+        }
+        .search-result-item .result-meta .source {
+            font-weight: 600;
+        }
+        .search-result-item .result-summary {
+            font-size: 14px;
+            color: var(--gray-600);
+            line-height: 1.6;
+        }
+        .search-result-item .result-tags {
+            display: flex;
+            gap: 6px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        .search-result-item .result-tags .tag {
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            background: var(--gray-100);
+            color: var(--gray-600);
+        }
+        .search-result-item .result-tags .tag.category {
+            background: var(--primary-100);
+            color: var(--primary-700);
+        }
+        .search-result-item .result-tags .tag.status-breaking {
+            background: var(--danger-bg);
+            color: var(--danger);
+        }
+        .search-result-item .result-tags .tag.status-published {
+            background: var(--success-bg);
+            color: var(--success);
+        }
+        .search-result-item .result-tags .tag.status-draft {
+            background: var(--warning-bg);
+            color: var(--warning);
+        }
+        .search-result-item .result-tags .tag.status-archived {
+            background: var(--gray-200);
+            color: var(--gray-500);
+        }
+        .search-result-item .result-actions {
+            margin-top: 12px;
+            display: flex;
+            gap: 8px;
+        }
+        .search-result-item .result-actions button {
+            padding: 4px 16px;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .search-result-item .result-actions .view-btn {
+            background: var(--primary-600);
+            color: white;
+        }
+        .search-result-item .result-actions .view-btn:hover {
+            background: var(--primary-700);
+        }
+        .search-result-item .result-actions .share-btn {
+            background: white;
+            color: var(--gray-600);
+            border: 1px solid var(--gray-200);
+        }
+        .search-result-item .result-actions .share-btn:hover {
+            background: var(--gray-50);
+            border-color: var(--gray-300);
+        }
+
+        .search-stats-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--gray-200);
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .search-stats-bar .stats-text {
+            color: var(--gray-500);
+            font-size: 14px;
+        }
+        .search-stats-bar .stats-text strong {
+            color: var(--gray-700);
+        }
+        .view-toggle {
+            display: flex;
+            gap: 4px;
+            background: var(--gray-100);
+            border-radius: var(--radius-sm);
+            padding: 4px;
+        }
+        .view-toggle button {
+            padding: 6px 14px;
+            border: none;
+            border-radius: 4px;
+            background: transparent;
+            color: var(--gray-500);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 13px;
+            font-weight: 500;
+        }
+        .view-toggle button.active {
+            background: white;
+            color: var(--gray-800);
+            box-shadow: var(--shadow);
+        }
+        .view-toggle button:hover {
+            color: var(--gray-700);
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--gray-400);
+        }
+        .no-results i {
+            font-size: 48px;
+            display: block;
+            margin-bottom: 16px;
+            color: var(--gray-300);
+        }
+        .no-results h3 {
+            color: var(--gray-600);
+            margin-bottom: 4px;
+        }
+        .no-results p {
+            color: var(--gray-400);
+        }
+        .suggested-searches {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 12px;
+        }
+        .suggested-searches .suggestion {
+            padding: 6px 16px;
+            background: var(--gray-100);
+            border-radius: 20px;
+            font-size: 13px;
+            color: var(--gray-600);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .suggested-searches .suggestion:hover {
+            background: var(--primary-100);
+            color: var(--primary-700);
+        }
+
+        /* ============================================
+           PAGINATION
+           ============================================ */
+        .pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            border-top: 1px solid var(--gray-200);
+            flex-wrap: wrap;
+            gap: 12px;
+            background: white;
+            border-radius: 0 0 var(--radius) var(--radius);
+        }
+        .pagination .pagination-info {
+            color: var(--gray-500);
+            font-size: 14px;
+        }
+        .pagination .pagination-buttons {
+            display: flex;
+            gap: 4px;
+        }
+        .pagination .pagination-buttons button {
+            padding: 6px 14px;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-sm);
+            background: white;
+            color: var(--gray-600);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 14px;
+        }
+        .pagination .pagination-buttons button:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-300);
+            color: var(--primary-600);
+        }
+        .pagination .pagination-buttons button.active {
+            background: var(--primary-600);
+            border-color: var(--primary-600);
+            color: white;
+        }
+        .pagination .pagination-buttons button.active:hover {
+            background: var(--primary-700);
+            border-color: var(--primary-700);
+        }
+        .pagination .pagination-buttons button:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* ============================================
+           NOTIFICATION PANEL
+           ============================================ */
+        .notification-panel {
+            position: fixed;
+            top: 0;
+            right: -420px;
+            width: 400px;
+            height: 100%;
+            background: white;
+            box-shadow: var(--shadow-lg);
+            z-index: 200;
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+        }
+        .notification-panel.open {
+            right: 0;
+        }
+        .notification-panel .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        .notification-panel .panel-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .notification-panel .panel-header h3 .count {
+            background: var(--primary-100);
+            color: var(--primary-700);
+            font-size: 13px;
+            padding: 1px 10px;
+            border-radius: 20px;
+        }
+        .notification-panel .panel-header .close-btn {
+            width: 36px;
+            height: 36px;
+            border: none;
+            border-radius: 50%;
+            background: var(--gray-100);
+            color: var(--gray-600);
+            font-size: 18px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .notification-panel .panel-header .close-btn:hover {
+            background: var(--gray-200);
+        }
+        .notification-panel .panel-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 24px;
+        }
+        .notification-item {
+            display: flex;
+            gap: 14px;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--gray-100);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        .notification-item:hover {
+            background: var(--gray-50);
+            margin: 0 -12px;
+            padding: 14px 12px;
+            border-radius: var(--radius-sm);
+        }
+        .notification-item .notif-icon {
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+        .notification-item .notif-icon.breaking {
+            background: var(--danger-bg);
+            color: var(--danger);
+        }
+        .notification-item .notif-icon.update {
+            background: var(--primary-100);
+            color: var(--primary-600);
+        }
+        .notification-item .notif-content {
+            flex: 1;
+        }
+        .notification-item .notif-content .notif-title {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--gray-800);
+        }
+        .notification-item .notif-content .notif-body {
+            font-size: 13px;
+            color: var(--gray-500);
+            margin-top: 2px;
+        }
+        .notification-item .notif-content .notif-time {
+            font-size: 12px;
+            color: var(--gray-400);
+            margin-top: 4px;
+        }
+        .notification-item .notif-unread {
+            width: 8px;
+            height: 8px;
+            min-width: 8px;
+            background: var(--primary-500);
+            border-radius: 50%;
+            margin-top: 6px;
+        }
+        .panel-footer {
+            padding: 16px 24px;
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            gap: 12px;
+        }
+        .panel-footer button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 14px;
+        }
+        .panel-footer .mark-all {
+            background: var(--primary-50);
+            color: var(--primary-600);
+        }
+        .panel-footer .mark-all:hover {
+            background: var(--primary-100);
+        }
+        .panel-footer .view-all {
+            background: var(--primary-600);
+            color: white;
+        }
+        .panel-footer .view-all:hover {
+            background: var(--primary-700);
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.4);
+            z-index: 150;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            backdrop-filter: blur(4px);
+        }
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* ============================================
+           TOAST
+           ============================================ */
+        .toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 300;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 450px;
+            width: 100%;
+        }
+        .toast {
+            padding: 16px 20px;
+            background: var(--gray-900);
+            color: white;
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideInRight 0.4s ease forwards;
+            width: 100%;
+        }
+        .toast.success { border-left: 4px solid var(--success); }
+        .toast.error { border-left: 4px solid var(--danger); }
+        .toast.warning { border-left: 4px solid var(--warning); }
+        .toast.info { border-left: 4px solid var(--primary-400); }
+        .toast .toast-icon { font-size: 20px; }
+        .toast.success .toast-icon { color: var(--success); }
+        .toast.error .toast-icon { color: var(--danger); }
+        .toast.warning .toast-icon { color: var(--warning); }
+        .toast.info .toast-icon { color: var(--primary-400); }
+        .toast .toast-content { flex: 1; }
+        .toast .toast-content .toast-title {
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .toast .toast-content .toast-message {
+            font-size: 13px;
+            opacity: 0.8;
+            margin-top: 2px;
+        }
+        .toast .toast-close {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.5);
+            cursor: pointer;
+            font-size: 16px;
+            padding: 4px;
+            transition: var(--transition);
+        }
+        .toast .toast-close:hover { color: white; }
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .toast.removing {
+            animation: slideOutRight 0.3s ease forwards;
+        }
+        @keyframes slideOutRight {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+
+        /* ============================================
+           MODAL
+           ============================================ */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.6);
+            z-index: 250;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal {
+            background: white;
+            border-radius: var(--radius);
+            padding: 32px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: var(--shadow-xl);
+            animation: fadeInUp 0.3s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .modal .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .modal .modal-header h3 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+        .modal .modal-header .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--gray-400);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .modal .modal-header .modal-close:hover {
+            color: var(--gray-600);
+        }
+        .modal .modal-body {
+            color: var(--gray-600);
+            line-height: 1.8;
+            margin-bottom: 24px;
+        }
+        .modal .modal-body .detail-row {
+            display: flex;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--gray-100);
+        }
+        .modal .modal-body .detail-row .label {
+            font-weight: 600;
+            width: 100px;
+            color: var(--gray-700);
+        }
+        .modal .modal-body .detail-row .value {
+            flex: 1;
+        }
+        .modal .modal-footer {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+        .modal .modal-footer button {
+            padding: 10px 24px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .modal .modal-footer .btn-secondary {
+            background: var(--gray-100);
+            color: var(--gray-700);
+        }
+        .modal .modal-footer .btn-secondary:hover {
+            background: var(--gray-200);
+        }
+        .modal .modal-footer .btn-primary {
+            background: var(--primary-600);
+            color: white;
+        }
+        .modal .modal-footer .btn-primary:hover {
+            background: var(--primary-700);
+        }
+        .modal .modal-footer .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+        .modal .modal-footer .btn-danger:hover {
+            background: #DC2626;
+        }
+        .modal .modal-footer .btn-success {
+            background: var(--success);
+            color: white;
+        }
+        .modal .modal-footer .btn-success:hover {
+            background: #059669;
+        }
+
+        /* ============================================
+           RESPONSIVE
+           ============================================ */
+        @media (max-width: 1024px) {
+            .main-content {
+                padding: 20px;
+            }
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 16px;
+            }
+            .menu-toggle {
+                display: flex !important;
+            }
+            .topbar {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+            .topbar-right {
+                justify-content: flex-end;
+            }
+            .search-filters-advanced .filter-row {
+                grid-template-columns: 1fr 1fr;
+            }
+            .search-hero h1 {
+                font-size: 24px;
+            }
+            .search-result-item {
+                padding: 16px;
+            }
+            .search-stats-bar {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+            .search-results-grid.grid-view {
+                grid-template-columns: 1fr;
+            }
+            .pagination {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+            .pagination .pagination-buttons {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            .toast-container {
+                bottom: 12px;
+                right: 12px;
+                left: 12px;
+                max-width: 100%;
+            }
+            .modal {
+                padding: 24px;
+                max-width: 95%;
+            }
+            .modal .modal-body .detail-row {
+                flex-direction: column;
+                padding: 12px 0;
+            }
+            .modal .modal-body .detail-row .label {
+                width: 100%;
+                margin-bottom: 4px;
+            }
+            .notification-panel {
+                width: 100%;
+                right: -100%;
+            }
+        }
+        @media (max-width: 480px) {
+            .search-filters-advanced .filter-row {
+                grid-template-columns: 1fr;
+            }
+            .search-filters-advanced .filter-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .search-filters-advanced .filter-actions .filter-btn {
+                justify-content: center;
+            }
+            .search-hero {
+                padding: 24px 16px;
+            }
+            .search-hero h1 {
+                font-size: 20px;
+            }
+            .search-hero .search-bar-large input {
+                padding: 14px 16px 14px 44px;
+                font-size: 14px;
+            }
+            .topbar-left h2 {
+                font-size: 20px;
+            }
+        }
+
+        /* ============================================
+           SCROLLBAR
+           ============================================ */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--gray-100);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--gray-300);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gray-400);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container" id="app">
+
+        <!-- ============================================
+        SIDEBAR
+        ============================================ -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+                <div class="logo"><i class="fas fa-newspaper"></i></div>
+                <div class="brand-text">
+                    <h1>Daily Journal</h1>
+                    <span>News Alert</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-label">Main</div>
+                <a href="dashboard.html" data-page="dashboard">
+                    <i class="fas fa-th-large"></i> Dashboard
+                </a>
+                <a href="search-news.html" class="active" data-page="search">
+                    <i class="fas fa-search"></i> Search News
+                    <span class="badge success" id="searchCount">12</span>
+                </a>
+                <a href="alerts.html" data-page="notifications">
+                    <i class="fas fa-bell"></i> Alerts
+                    <span class="badge" id="notifBadge">8</span>
+                </a>
+
+                <div class="nav-label">Categories</div>
+                <a href="category-technology.html" data-page="technology">
+                    <i class="fas fa-microchip"></i> Technology
+                </a>
+                <a href="category-business.html" data-page="business">
+                    <i class="fas fa-chart-line"></i> Business
+                </a>
+                <a href="category-sports.html" data-page="sports">
+                    <i class="fas fa-futbol"></i> Sports
+                </a>
+                <a href="category-entertainment.html" data-page="entertainment">
+                    <i class="fas fa-film"></i> Entertainment
+                </a>
+                <a href="category-health.html" data-page="health">
+                    <i class="fas fa-heartbeat"></i> Health
+                </a>
+
+                <div class="nav-label">Settings</div>
+                <a href="preferences.html" data-page="preferences">
+                    <i class="fas fa-sliders-h"></i> Preferences
+                </a>
+                <a href="sources.html" data-page="sources">
+                    <i class="fas fa-rss"></i> News Sources
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="help.html" data-page="help">
+                    <i class="fas fa-question-circle"></i> Help & Support
+                </a>
+                <a href="#" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        </aside>
+
+        <!-- MOBILE OVERLAY -->
+        <div class="mobile-overlay" id="mobileOverlay"></div>
+
+        <!-- ============================================
+        MAIN CONTENT
+        ============================================ -->
+        <main class="main-content">
+
+            <!-- TOP BAR -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button class="menu-toggle" id="menuToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div>
+                        <h2 id="pageTitle">Search News</h2>
+                        <div class="breadcrumb">
+                            <a href="dashboard.html">Home</a>
+                            <span>/</span>
+                            <span id="breadcrumbCurrent">Search News</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="topbar-right">
+                    <button class="search-btn" id="quickSearchBtn">
+                        <i class="fas fa-search"></i> Quick Search <span style="font-size: 11px; opacity: 0.6;">(Ctrl+K)</span>
+                    </button>
+                    <div class="notification-bell" id="bellIcon">
+                        <i class="fas fa-bell"></i>
+                        <span class="dot" id="bellDot"></span>
+                    </div>
+                    <div class="user-avatar" id="userAvatar">JD</div>
+                </div>
+            </header>
+
+            <!-- ============================================
+            SEARCH HERO
+            ============================================ -->
+            <div class="search-hero">
+                <h1>🔍 Search News Articles</h1>
+                <p>Find exactly what you're looking for across thousands of articles from trusted sources</p>
+                <div class="search-bar search-bar-large">
+                    <div class="search-input-wrapper">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search news articles, topics, or keywords..." id="searchInputLarge">
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================
+            ADVANCED FILTERS
+            ============================================ -->
+            <div class="search-filters-advanced">
+                <div class="filter-row">
+                    <div>
+                        <label><i class="fas fa-tag"></i> Category</label>
+                        <select id="filterCategory">
+                            <option value="all">All Categories</option>
+                            <option value="technology">Technology</option>
+                            <option value="business">Business</option>
+                            <option value="sports">Sports</option>
+                            <option value="entertainment">Entertainment</option>
+                            <option value="health">Health</option>
+                            <option value="politics">Politics</option>
+                            <option value="science">Science</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label><i class="fas fa-rss"></i> Source</label>
+                        <select id="filterSource">
+                            <option value="all">All Sources</option>
+                            <option value="cnn">CNN</option>
+                            <option value="bbc">BBC</option>
+                            <option value="reuters">Reuters</option>
+                            <option value="ap">Associated Press</option>
+                            <option value="nytimes">NY Times</option>
+                            <option value="guardian">The Guardian</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label><i class="fas fa-calendar"></i> Date</label>
+                        <select id="filterDate">
+                            <option value="all">Any Time</option>
+                            <option value="today">Today</option>
+                            <option value="week">This Week</option>
+                            <option value="month">This Month</option>
+                            <option value="year">This Year</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label><i class="fas fa-flag"></i> Status</label>
+                        <select id="filterStatus">
+                            <option value="all">All Status</option>
+                            <option value="breaking">Breaking</option>
+                            <option value="published">Published</option>
+                            <option value="draft">Draft</option>
+                            <option value="archived">Archived</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="filter-actions">
+                    <button class="filter-btn primary" id="applySearchFilters">
+                        <i class="fas fa-sliders-h"></i> Apply Filters
+                    </button>
+                    <button class="filter-btn outline" id="resetSearchFilters">
+                        <i class="fas fa-sync-alt"></i> Reset
+                    </button>
+                    <span class="filter-info">
+                        <i class="fas fa-info-circle"></i> Press Enter to search
+                    </span>
+                </div>
+            </div>
+
+            <!-- ============================================
+            RESULTS
+            ============================================ -->
+            <div class="search-stats-bar">
+                <div class="stats-text">
+                    Found <strong id="resultCount">0</strong> articles
+                    <span style="color: var(--gray-400); margin-left: 8px;" id="searchTime"></span>
+                </div>
+                <div class="view-toggle">
+                    <button class="active" data-view="list"><i class="fas fa-list"></i> List</button>
+                    <button data-view="grid"><i class="fas fa-th"></i> Grid</button>
+                </div>
+            </div>
+
+            <div class="search-results-grid" id="searchResults">
+                <!-- Results will be rendered by JavaScript -->
+            </div>
+
+            <!-- ============================================
+            PAGINATION
+            ============================================ -->
+            <div class="pagination" id="pagination">
+                <div class="pagination-info" id="paginationInfo">
+                    Showing <strong id="pageStart">0</strong> to <strong id="pageEnd">0</strong> of <strong id="totalItems">0</strong> results
+                </div>
+                <div class="pagination-buttons" id="paginationButtons">
+                    <!-- Rendered by JavaScript -->
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- ============================================
+    NOTIFICATION PANEL
+    ============================================ -->
+    <div class="overlay" id="panelOverlay"></div>
+    <div class="notification-panel" id="notificationPanel">
+        <div class="panel-header">
+            <h3>
+                <i class="fas fa-bell" style="color:var(--primary-600);"></i> News Alerts
+                <span class="count" id="panelNotifCount">8 new</span>
+            </h3>
+            <button class="close-btn" id="closePanel"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="panel-body" id="notificationPanelBody">
+            <!-- Rendered by JavaScript -->
+        </div>
+        <div class="panel-footer">
+            <button class="mark-all" id="markAllReadBtn">
+                <i class="fas fa-check-double"></i> Mark all read
+            </button>
+            <button class="view-all" id="viewAllNotifsBtn">View all alerts</button>
+        </div>
+    </div>
+
+    <!-- ============================================
+    TOAST CONTAINER
+    ============================================ -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- ============================================
+    MODAL
+    ============================================ -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal" id="modal">
+            <div class="modal-header">
+                <h3 id="modalTitle">Modal Title</h3>
+                <button class="modal-close" id="modalClose">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Modal content -->
+            </div>
+            <div class="modal-footer" id="modalFooter">
+                <!-- Modal buttons -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================
+    JAVASCRIPT - EMBEDDED DATA AND LOGIC
+    ============================================ -->
+    <script>
+        // ============================================
+        // DATA - NEWS ARTICLES
+        // ============================================
+        const NEWS_DATA = [
+            {
+                id: 1,
+                title: 'AI Breakthrough: New Model Beats Human Performance in Medical Diagnosis',
+                category: 'technology',
+                source: 'cnn',
+                published: '2 hours ago',
+                timestamp: Date.now() - 7200000,
+                status: 'breaking',
+                summary: 'Researchers have developed a new AI model that outperforms human doctors in diagnosing diseases from medical images.',
+                author: 'Sarah Chen',
+                url: '#'
+            },
+            {
+                id: 2,
+                title: 'Global Markets Rally as Inflation Shows Signs of Cooling',
+                category: 'business',
+                source: 'reuters',
+                published: '4 hours ago',
+                timestamp: Date.now() - 14400000,
+                status: 'published',
+                summary: 'Stock markets around the world surged today after new data suggested inflation may be peaking.',
+                author: 'Mike Johnson',
+                url: '#'
+            },
+            {
+                id: 3,
+                title: 'Champions League Final: Underdogs Stun Favorites in Dramatic Match',
+                category: 'sports',
+                source: 'bbc',
+                published: '6 hours ago',
+                timestamp: Date.now() - 21600000,
+                status: 'published',
+                summary: 'In one of the greatest upsets in Champions League history, the underdogs defeated the reigning champions.',
+                author: 'Emma Wilson',
+                url: '#'
+            },
+            {
+                id: 4,
+                title: 'New Study Reveals Breakthrough in Cancer Treatment Research',
+                category: 'health',
+                source: 'ap',
+                published: '8 hours ago',
+                timestamp: Date.now() - 28800000,
+                status: 'breaking',
+                summary: 'Scientists have discovered a new approach that could revolutionize cancer treatment and improve survival rates.',
+                author: 'Alex Rivera',
+                url: '#'
+            },
+            {
+                id: 5,
+                title: 'Hollywood Writers Reach Tentative Deal, Ending Historic Strike',
+                category: 'entertainment',
+                source: 'nytimes',
+                published: '12 hours ago',
+                timestamp: Date.now() - 43200000,
+                status: 'published',
+                summary: 'After months of negotiations, the Writers Guild has reached a tentative agreement with studios.',
+                author: 'Lisa Park',
+                url: '#'
+            },
+            {
+                id: 6,
+                title: 'SpaceX Successfully Launches New Satellite Constellation',
+                category: 'technology',
+                source: 'cnn',
+                published: '1 day ago',
+                timestamp: Date.now() - 86400000,
+                status: 'published',
+                summary: 'The latest SpaceX mission has deployed 60 new satellites into orbit for global internet coverage.',
+                author: 'David Kim',
+                url: '#'
+            },
+            {
+                id: 7,
+                title: 'Federal Reserve Signals Potential Rate Cut in Coming Months',
+                category: 'business',
+                source: 'reuters',
+                published: '1 day ago',
+                timestamp: Date.now() - 90000000,
+                status: 'draft',
+                summary: 'Federal Reserve officials have indicated that they are considering interest rate cuts later this year.',
+                author: 'Maria Garcia',
+                url: '#'
+            },
+            {
+                id: 8,
+                title: 'World Cup Qualifiers: Team Advances with Last-Minute Goal',
+                category: 'sports',
+                source: 'bbc',
+                published: '2 days ago',
+                timestamp: Date.now() - 172800000,
+                status: 'archived',
+                summary: 'A dramatic last-minute goal secured the team\'s spot in the World Cup finals.',
+                author: 'James Wilson',
+                url: '#'
+            },
+            {
+                id: 9,
+                title: 'New Album Release Breaks Streaming Records Worldwide',
+                category: 'entertainment',
+                source: 'guardian',
+                published: '2 days ago',
+                timestamp: Date.now() - 180000000,
+                status: 'published',
+                summary: 'The highly anticipated album has shattered streaming records across all major platforms.',
+                author: 'Anna Martinez',
+                url: '#'
+            },
+            {
+                id: 10,
+                title: 'Climate Summit: Nations Agree to New Emission Reduction Targets',
+                category: 'politics',
+                source: 'ap',
+                published: '3 days ago',
+                timestamp: Date.now() - 259200000,
+                status: 'published',
+                summary: 'World leaders have reached a historic agreement on reducing carbon emissions at the climate summit.',
+                author: 'Tom Anderson',
+                url: '#'
+            },
+            {
+                id: 11,
+                title: 'Quantum Computing Milestone: 100-Qubit Processor Achieved',
+                category: 'science',
+                source: 'cnn',
+                published: '3 days ago',
+                timestamp: Date.now() - 270000000,
+                status: 'breaking',
+                summary: 'Scientists have successfully built a 100-qubit quantum processor, a major step toward practical quantum computing.',
+                author: 'Sarah Chen',
+                url: '#'
+            },
+            {
+                id: 12,
+                title: 'Tech Giants Face New Antitrust Regulations in Europe',
+                category: 'technology',
+                source: 'reuters',
+                published: '4 days ago',
+                timestamp: Date.now() - 345600000,
+                status: 'published',
+                summary: 'European regulators have proposed new rules targeting the market dominance of major tech companies.',
+                author: 'Mike Johnson',
+                url: '#'
+            },
+            {
+                id: 13,
+                title: 'Mental Health Crisis: New Study Shows Alarming Trends Among Youth',
+                category: 'health',
+                source: 'nytimes',
+                published: '5 days ago',
+                timestamp: Date.now() - 432000000,
+                status: 'archived',
+                summary: 'A comprehensive study reveals a significant increase in mental health issues among young people.',
+                author: 'Emma Wilson',
+                url: '#'
+            },
+            {
+                id: 14,
+                title: 'Stock Market Update: Tech Sector Leads Recovery',
+                category: 'business',
+                source: 'ap',
+                published: '5 days ago',
+                timestamp: Date.now() - 440000000,
+                status: 'draft',
+                summary: 'Technology stocks led a market recovery today as investor confidence began to return.',
+                author: 'Alex Rivera',
+                url: '#'
+            },
+            {
+                id: 15,
+                title: 'New Species Discovered in Deep Ocean Expedition',
+                category: 'science',
+                source: 'bbc',
+                published: '6 days ago',
+                timestamp: Date.now() - 518400000,
+                status: 'published',
+                summary: 'A deep-sea expedition has discovered several new species in the unexplored depths of the ocean.',
+                author: 'Lisa Park',
+                url: '#'
+            }
+        ];
+
+        // ============================================
+        // HELPERS
+        // ============================================
+        const CATEGORY_ICONS = {
+            technology: 'fa-microchip',
+            business: 'fa-chart-line',
+            sports: 'fa-futbol',
+            entertainment: 'fa-film',
+            health: 'fa-heartbeat',
+            politics: 'fa-landmark',
+            science: 'fa-flask'
+        };
+
+        const CATEGORY_COLORS = {
+            technology: '#1E5399',
+            business: '#0F8A6B',
+            sports: '#B5750F',
+            entertainment: '#C0362C',
+            health: '#2F6FBB',
+            politics: '#47536A',
+            science: '#5590D2'
+        };
+
+        const SOURCE_NAMES = {
+            cnn: 'CNN',
+            bbc: 'BBC',
+            reuters: 'Reuters',
+            ap: 'Associated Press',
+            nytimes: 'NY Times',
+            guardian: 'The Guardian'
+        };
+
+        const SOURCE_COLORS = {
+            cnn: '#CC0000',
+            bbc: '#B80000',
+            reuters: '#FF8000',
+            ap: '#333333',
+            nytimes: '#D4A017',
+            guardian: '#052962'
+        };
+
+        // ============================================
+        // TOAST MANAGER
+        // ============================================
+        const ToastManager = {
+            container: null,
+            idCounter: 0,
+
+            init() {
+                this.container = document.getElementById('toastContainer');
+            },
+
+            show(options) {
+                const { title = 'Notification', message = '', type = 'info', duration = 4000 } = options;
+                const id = ++this.idCounter;
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                toast.dataset.id = id;
+
+                const iconMap = {
+                    success: 'fa-check-circle',
+                    error: 'fa-exclamation-circle',
+                    warning: 'fa-exclamation-triangle',
+                    info: 'fa-info-circle'
+                };
+
+                toast.innerHTML = `
+                    <div class="toast-icon"><i class="fas ${iconMap[type] || iconMap.info}"></i></div>
+                    <div class="toast-content">
+                        <div class="toast-title">${title}</div>
+                        <div class="toast-message">${message}</div>
+                    </div>
+                    <button class="toast-close" data-id="${id}"><i class="fas fa-times"></i></button>
+                `;
+
+                this.container.appendChild(toast);
+
+                const timeout = setTimeout(() => this.remove(id), duration);
+                toast.querySelector('.toast-close').addEventListener('click', () => {
+                    clearTimeout(timeout);
+                    this.remove(id);
+                });
+
+                return id;
+            },
+
+            remove(id) {
+                const toast = this.container.querySelector(`[data-id="${id}"]`);
+                if (toast) {
+                    toast.classList.add('removing');
+                    setTimeout(() => toast.remove(), 300);
+                }
+            },
+
+            success(title, message, duration) { return this.show({ title, message, type: 'success', duration }); },
+            error(title, message, duration) { return this.show({ title, message, type: 'error', duration }); },
+            warning(title, message, duration) { return this.show({ title, message, type: 'warning', duration }); },
+            info(title, message, duration) { return this.show({ title, message, type: 'info', duration }); }
+        };
+
+        // ============================================
+        // MODAL MANAGER
+        // ============================================
+        const ModalManager = {
+            overlay: null,
+            modal: null,
+            title: null,
+            body: null,
+            footer: null,
+            closeBtn: null,
+            callbacks: {},
+
+            init() {
+                this.overlay = document.getElementById('modalOverlay');
+                this.modal = document.getElementById('modal');
+                this.title = document.getElementById('modalTitle');
+                this.body = document.getElementById('modalBody');
+                this.footer = document.getElementById('modalFooter');
+                this.closeBtn = document.getElementById('modalClose');
+
+                this.closeBtn.addEventListener('click', () => this.close());
+                this.overlay.addEventListener('click', (e) => {
+                    if (e.target === this.overlay) this.close();
+                });
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') this.close();
+                });
+            },
+
+            open(options) {
+                const {
+                    title = 'Modal',
+                    content = '',
+                    onClose = null,
+                    onConfirm = null,
+                    confirmText = 'Confirm',
+                    cancelText = 'Cancel',
+                    showConfirm = true,
+                    showCancel = true,
+                    danger = false,
+                    success = false
+                } = options;
+
+                this.title.textContent = title;
+                this.body.innerHTML = content;
+
+                let footerHTML = '';
+                if (showCancel) {
+                    footerHTML += `<button class="btn-secondary" id="modalCancel">${cancelText}</button>`;
+                }
+                if (showConfirm) {
+                    let btnClass = 'btn-primary';
+                    if (danger) btnClass = 'btn-danger';
+                    if (success) btnClass = 'btn-success';
+                    footerHTML += `<button class="${btnClass}" id="modalConfirm">${confirmText}</button>`;
+                }
+                this.footer.innerHTML = footerHTML;
+
+                this.callbacks.onClose = onClose;
+                this.callbacks.onConfirm = onConfirm;
+
+                const cancelBtn = document.getElementById('modalCancel');
+                const confirmBtn = document.getElementById('modalConfirm');
+
+                if (cancelBtn) {
+                    cancelBtn.addEventListener('click', () => this.close());
+                }
+                if (confirmBtn) {
+                    confirmBtn.addEventListener('click', () => {
+                        if (this.callbacks.onConfirm) this.callbacks.onConfirm();
+                        this.close();
+                    });
+                }
+
+                this.overlay.classList.add('active');
+            },
+
+            close() {
+                this.overlay.classList.remove('active');
+                if (this.callbacks.onClose) this.callbacks.onClose();
+            },
+
+            showNewsDetail(article) {
+                const statusMap = {
+                    breaking: '🔴 Breaking News',
+                    published: '✅ Published',
+                    draft: '📝 Draft',
+                    archived: '📦 Archived'
+                };
+
+                const content = `
+                    <div class="detail-row">
+                        <span class="label">Title</span>
+                        <span class="value"><strong>${article.title}</strong></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="label">Category</span>
+                        <span class="value">
+                            <i class="fas ${CATEGORY_ICONS[article.category] || 'fa-newspaper'}" 
+                               style="color: ${CATEGORY_COLORS[article.category] || 'var(--gray-500)'};"></i>
+                            ${article.category.charAt(0).toUpperCase() + article.category.slice(1)}
+                        </span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="label">Source</span>
+                        <span class="value">
+                            <span style="color: ${SOURCE_COLORS[article.source] || 'var(--gray-500)'}; font-weight: 600;">
+                                ${SOURCE_NAMES[article.source] || article.source}
+                            </span>
+                        </span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="label">Status</span>
+                        <span class="value">
+                            <span class="status-badge ${article.status}" style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; background: var(--gray-100);">
+                                <span class="dot" style="width: 6px; height: 6px; border-radius: 50%; display: inline-block;"></span> ${statusMap[article.status] || article.status}
+                            </span>
+                        </span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="label">Published</span>
+                        <span class="value">${article.published}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="label">Author</span>
+                        <span class="value">${article.author}</span>
+                    </div>
+                    <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--gray-200);">
+                        <strong>Summary:</strong>
+                        <p style="margin-top: 4px;">${article.summary}</p>
+                    </div>
+                `;
+
+                this.open({
+                    title: '📰 News Article Details',
+                    content,
+                    confirmText: 'Close',
+                    showCancel: false
+                });
+            },
+
+            showShareArticle(article) {
+                const content = `
+                    <div style="text-align: center; padding: 8px 0;">
+                        <p style="margin-bottom: 16px; font-weight: 500;">Share this article</p>
+                        <div style="display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;">
+                            <button onclick="navigator.clipboard.writeText('${article.title}')" 
+                                    style="padding: 12px 20px; background: var(--primary-100); border: none; border-radius: var(--radius-sm); cursor: pointer; transition: var(--transition);">
+                                <i class="fas fa-copy" style="color: var(--primary-600); font-size: 20px;"></i>
+                                <span style="display: block; font-size: 11px; color: var(--gray-600);">Copy Link</span>
+                            </button>
+                            <button onclick="window.open('https://twitter.com/intent/tweet?text=${encodeURIComponent(article.title)}', '_blank')" 
+                                    style="padding: 12px 20px; background: #1DA1F2; border: none; border-radius: var(--radius-sm); cursor: pointer; transition: var(--transition);">
+                                <i class="fab fa-twitter" style="color: white; font-size: 20px;"></i>
+                                <span style="display: block; font-size: 11px; color: white;">Twitter</span>
+                            </button>
+                            <button onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}', '_blank')" 
+                                    style="padding: 12px 20px; background: #4267B2; border: none; border-radius: var(--radius-sm); cursor: pointer; transition: var(--transition);">
+                                <i class="fab fa-facebook" style="color: white; font-size: 20px;"></i>
+                                <span style="display: block; font-size: 11px; color: white;">Facebook</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                this.open({
+                    title: '📤 Share Article',
+                    content,
+                    confirmText: 'Close',
+                    showCancel: false
+                });
+            }
+        };
+
+        // ============================================
+        // SEARCH PAGE CONTROLLER
+        // ============================================
+        const SearchPage = {
+            currentPage: 1,
+            pageSize: 10,
+            totalPages: 0,
+            filteredData: [],
+            currentView: 'list',
+            searchQuery: '',
+
+            init() {
+                this.filteredData = [...NEWS_DATA];
+                this.bindEvents();
+                this.renderResults();
+                this.updateStats();
+                this.setupNotificationPanel();
+                console.log('🔍 Search page initialized with', this.filteredData.length, 'articles');
+            },
+
+            bindEvents() {
+                const searchInput = document.getElementById('searchInputLarge');
+                let debounceTimer;
+
+                searchInput.addEventListener('input', () => {
+                    clearTimeout(debounceTimer);
+                    debounceTimer = setTimeout(() => {
+                        const value = searchInput.value.trim();
+                        if (value.length > 2) {
+                            this.performSearch();
+                        } else if (value.length === 0) {
+                            this.filteredData = [...NEWS_DATA];
+                            this.currentPage = 1;
+                            this.renderResults();
+                            this.updateStats();
+                        }
+                    }, 300);
+                });
+
+                searchInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        this.performSearch();
+                    }
+                    if (e.key === 'Escape') {
+                        searchInput.blur();
+                    }
+                });
+
+                document.getElementById('applySearchFilters').addEventListener('click', () => {
+                    this.performSearch();
+                });
+
+                document.getElementById('resetSearchFilters').addEventListener('click', () => {
+                    document.getElementById('searchInputLarge').value = '';
+                    document.getElementById('filterCategory').value = 'all';
+                    document.getElementById('filterSource').value = 'all';
+                    document.getElementById('filterDate').value = 'all';
+                    document.getElementById('filterStatus').value = 'all';
+                    this.filteredData = [...NEWS_DATA];
+                    this.currentPage = 1;
+                    this.renderResults();
+                    this.updateStats();
+                    ToastManager.info('Reset', 'All filters have been cleared');
+                });
+
+                document.querySelectorAll('.view-toggle button').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        document.querySelectorAll('.view-toggle button').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        this.currentView = btn.dataset.view;
+                        this.renderResults();
+                    });
+                });
+
+                document.getElementById('quickSearchBtn').addEventListener('click', () => {
+                    document.getElementById('searchInputLarge').focus();
+                });
+
+                document.addEventListener('keydown', (e) => {
+                    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                        e.preventDefault();
+                        document.getElementById('searchInputLarge').focus();
+                    }
+                });
+
+                document.getElementById('logoutBtn').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    ModalManager.open({
+                        title: 'Logout',
+                        content: '<p>Are you sure you want to logout?</p>',
+                        confirmText: 'Logout',
+                        danger: true,
+                        onConfirm: () => {
+                            ToastManager.success('Logged Out', 'See you next time!');
+                        }
+                    });
+                });
+
+                document.getElementById('userAvatar').addEventListener('click', () => {
+                    ToastManager.info('Profile', 'Viewing user profile');
+                });
+
+                document.getElementById('bellIcon').addEventListener('click', () => {
+                    document.getElementById('notificationPanel').classList.toggle('open');
+                    document.getElementById('panelOverlay').classList.toggle('active');
+                });
+
+                document.getElementById('closePanel').addEventListener('click', () => {
+                    document.getElementById('notificationPanel').classList.remove('open');
+                    document.getElementById('panelOverlay').classList.remove('active');
+                });
+
+                document.getElementById('panelOverlay').addEventListener('click', () => {
+                    document.getElementById('notificationPanel').classList.remove('open');
+                    document.getElementById('panelOverlay').classList.remove('active');
+                });
+
+                document.getElementById('markAllReadBtn').addEventListener('click', () => {
+                    ToastManager.success('All Read', 'All alerts marked as read');
+                });
+
+                document.getElementById('viewAllNotifsBtn').addEventListener('click', () => {
+                    window.location.href = 'alerts.html';
+                });
+
+                // Menu toggle
+                document.getElementById('menuToggle').addEventListener('click', () => {
+                    document.getElementById('sidebar').classList.toggle('open');
+                    document.getElementById('mobileOverlay').classList.toggle('active');
+                });
+
+                document.getElementById('mobileOverlay').addEventListener('click', () => {
+                    document.getElementById('sidebar').classList.remove('open');
+                    document.getElementById('mobileOverlay').classList.remove('active');
+                });
+
+                window.addEventListener('resize', () => {
+                    if (window.innerWidth > 768) {
+                        document.getElementById('sidebar').classList.remove('open');
+                        document.getElementById('mobileOverlay').classList.remove('active');
+                    }
+                });
+            },
+
+            performSearch() {
+                const query = document.getElementById('searchInputLarge').value.trim();
+                const category = document.getElementById('filterCategory').value;
+                const source = document.getElementById('filterSource').value;
+                const date = document.getElementById('filterDate').value;
+                const status = document.getElementById('filterStatus').value;
+
+                let data = [...NEWS_DATA];
+
+                if (query) {
+                    const q = query.toLowerCase();
+                    data = data.filter(n => 
+                        n.title.toLowerCase().includes(q) ||
+                        n.summary.toLowerCase().includes(q) ||
+                        n.author.toLowerCase().includes(q) ||
+                        (n.category && n.category.toLowerCase().includes(q)) ||
+                        (n.source && n.source.toLowerCase().includes(q))
+                    );
+                }
+
+                if (category !== 'all') {
+                    data = data.filter(n => n.category === category);
+                }
+                if (source !== 'all') {
+                    data = data.filter(n => n.source === source);
+                }
+                if (status !== 'all') {
+                    data = data.filter(n => n.status === status);
+                }
+                if (date !== 'all') {
+                    const now = Date.now();
+                    const ranges = {
+                        'today': 86400000,
+                        'week': 604800000,
+                        'month': 2592000000,
+                        'year': 31536000000
+                    };
+                    const cutoff = ranges[date];
+                    if (cutoff) {
+                        data = data.filter(n => (now - n.timestamp) <= cutoff);
+                    }
+                }
+
+                this.filteredData = data;
+                this.currentPage = 1;
+                this.updateStats();
+                this.renderResults();
+
+                if (data.length === 0 && query) {
+                    ToastManager.info('No Results', `No articles found for "${query}"`);
+                } else if (data.length > 0 && query) {
+                    ToastManager.success('Search Complete', `Found ${data.length} articles for "${query}"`);
+                }
+            },
+
+            updateStats() {
+                document.getElementById('resultCount').textContent = this.filteredData.length;
+                document.getElementById('searchTime').textContent = `(${new Date().toLocaleTimeString()})`;
+                this.totalPages = Math.ceil(this.filteredData.length / this.pageSize);
+                if (this.currentPage > this.totalPages) {
+                    this.currentPage = Math.max(1, this.totalPages);
+                }
+                document.getElementById('searchCount').textContent = NEWS_DATA.length;
+            },
+
+            getPageData() {
+                const start = (this.currentPage - 1) * this.pageSize;
+                const end = start + this.pageSize;
+                return this.filteredData.slice(start, end);
+            },
+
+            renderResults() {
+                const container = document.getElementById('searchResults');
+                const pageData = this.getPageData();
+
+                container.className = 'search-results-grid';
+                if (this.currentView === 'grid') {
+                    container.classList.add('grid-view');
+                }
+
+                if (pageData.length === 0) {
+                    container.innerHTML = `
+                        <div class="no-results">
+                            <i class="fas fa-search"></i>
+                            <h3>No articles found</h3>
+                            <p style="color: var(--gray-500);">Try adjusting your search terms or filters</p>
+                            <div class="suggested-searches">
+                                <span class="suggestion" data-search="technology">Technology</span>
+                                <span class="suggestion" data-search="business">Business</span>
+                                <span class="suggestion" data-search="sports">Sports</span>
+                                <span class="suggestion" data-search="AI">AI</span>
+                                <span class="suggestion" data-search="market">Market</span>
+                            </div>
+                        </div>
+                    `;
+                    document.querySelectorAll('.suggestion').forEach(el => {
+                        el.addEventListener('click', () => {
+                            document.getElementById('searchInputLarge').value = el.dataset.search;
+                            this.performSearch();
+                        });
+                    });
+                    this.renderPagination();
+                    return;
+                }
+
+                const statusMap = {
+                    breaking: 'Breaking',
+                    published: 'Published',
+                    draft: 'Draft',
+                    archived: 'Archived'
+                };
+
+                const statusClassMap = {
+                    breaking: 'status-breaking',
+                    published: 'status-published',
+                    draft: 'status-draft',
+                    archived: 'status-archived'
+                };
+
+                container.innerHTML = pageData.map(article => `
+                    <div class="search-result-item" data-id="${article.id}">
+                        <div class="result-title">
+                            ${article.status === 'breaking' ? '<i class="fas fa-circle breaking-icon"></i>' : ''}
+                            ${article.title}
+                        </div>
+                        <div class="result-meta">
+                            <span class="source" style="color: ${SOURCE_COLORS[article.source] || 'var(--gray-500)'};">
+                                <i class="fas fa-rss" style="font-size: 10px;"></i>
+                                ${SOURCE_NAMES[article.source] || article.source}
+                            </span>
+                            <span>•</span>
+                            <span><i class="far fa-clock"></i> ${article.published}</span>
+                            <span>•</span>
+                            <span><i class="far fa-user"></i> ${article.author}</span>
+                        </div>
+                        <div class="result-summary">${article.summary}</div>
+                        <div class="result-tags">
+                            <span class="tag category">
+                                <i class="fas ${CATEGORY_ICONS[article.category] || 'fa-newspaper'}" 
+                                   style="color: ${CATEGORY_COLORS[article.category] || 'var(--gray-500)'};"></i>
+                                ${article.category.charAt(0).toUpperCase() + article.category.slice(1)}
+                            </span>
+                            <span class="tag ${statusClassMap[article.status] || ''}">
+                                ${statusMap[article.status] || article.status}
+                            </span>
+                            ${article.status === 'breaking' ? '<span class="tag status-breaking">🔴 LIVE</span>' : ''}
+                        </div>
+                        <div class="result-actions">
+                            <button class="view-btn" data-id="${article.id}">
+                                <i class="fas fa-eye"></i> View
+                            </button>
+                            <button class="share-btn" data-id="${article.id}">
+                                <i class="fas fa-share-alt"></i> Share
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+
+                container.querySelectorAll('.view-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const id = parseInt(btn.dataset.id);
+                        const article = this.filteredData.find(a => a.id === id);
+                        if (article) ModalManager.showNewsDetail(article);
+                    });
+                });
+
+                container.querySelectorAll('.share-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const id = parseInt(btn.dataset.id);
+                        const article = this.filteredData.find(a => a.id === id);
+                        if (article) ModalManager.showShareArticle(article);
+                    });
+                });
+
+                container.querySelectorAll('.search-result-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        const id = parseInt(item.dataset.id);
+                        const article = this.filteredData.find(a => a.id === id);
+                        if (article) ModalManager.showNewsDetail(article);
+                    });
+                });
+
+                this.renderPagination();
+            },
+
+            renderPagination() {
+                const container = document.getElementById('paginationButtons');
+                const total = this.filteredData.length;
+                const start = (this.currentPage - 1) * this.pageSize + 1;
+                const end = Math.min(this.currentPage * this.pageSize, total);
+
+                document.getElementById('pageStart').textContent = total > 0 ? start : 0;
+                document.getElementById('pageEnd').textContent = end;
+                document.getElementById('totalItems').textContent = total;
+
+                if (this.totalPages <= 1) {
+                    container.innerHTML = '';
+                    return;
+                }
+
+                let html = '';
+                html += `<button class="page-btn" data-page="prev" ${this.currentPage === 1 ? 'disabled' : ''}><i class="fas fa-chevron-left"></i></button>`;
+
+                const pages = this.getPageNumbers();
+                pages.forEach(p => {
+                    if (p === '...') {
+                        html += `<button disabled>...</button>`;
+                    } else {
+                        html += `<button class="page-btn ${p === this.currentPage ? 'active' : ''}" data-page="${p}">${p}</button>`;
+                    }
+                });
+
+                html += `<button class="page-btn" data-page="next" ${this.currentPage === this.totalPages ? 'disabled' : ''}><i class="fas fa-chevron-right"></i></button>`;
+
+                container.innerHTML = html;
+
+                container.querySelectorAll('.page-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const page = btn.dataset.page;
+                        if (page === 'prev' && this.currentPage > 1) {
+                            this.currentPage--;
+                        } else if (page === 'next' && this.currentPage < this.totalPages) {
+                            this.currentPage++;
+                        } else if (page !== 'prev' && page !== 'next') {
+                            this.currentPage = parseInt(page);
+                        }
+                        this.renderResults();
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    });
+                });
+            },
+
+            getPageNumbers() {
+                const pages = [];
+                const total = this.totalPages;
+                const current = this.currentPage;
+
+                if (total <= 7) {
+                    for (let i = 1; i <= total; i++) pages.push(i);
+                } else {
+                    pages.push(1);
+                    if (current > 3) pages.push('...');
+                    for (let i = Math.max(2, current - 1); i <= Math.min(total - 1, current + 1); i++) {
+                        pages.push(i);
+                    }
+                    if (current < total - 2) pages.push('...');
+                    pages.push(total);
+                }
+                return pages;
+            },
+
+            setupNotificationPanel() {
+                const body = document.getElementById('notificationPanelBody');
+                const alerts = NEWS_DATA.filter(n => n.status === 'breaking' || n.status === 'published').slice(0, 8);
+
+                if (alerts.length === 0) {
+                    body.innerHTML = `
+                        <div style="text-align: center; padding: 40px 0; color: var(--gray-400);">
+                            <i class="fas fa-bell-slash" style="font-size: 32px; display: block; margin-bottom: 12px;"></i>
+                            No new alerts
+                        </div>
+                    `;
+                    return;
+                }
+
+                body.innerHTML = alerts.map(alert => `
+                    <div class="notification-item">
+                        <div class="notif-icon ${alert.status === 'breaking' ? 'breaking' : 'update'}">
+                            <i class="fas ${alert.status === 'breaking' ? 'fa-bolt' : 'fa-newspaper'}"></i>
+                        </div>
+                        <div class="notif-content">
+                            <div class="notif-title">${alert.title}</div>
+                            <div class="notif-body">${alert.summary.substring(0, 80)}...</div>
+                            <div class="notif-time">${alert.published}</div>
+                        </div>
+                        <div class="notif-unread"></div>
+                    </div>
+                `).join('');
+
+                document.getElementById('panelNotifCount').textContent = alerts.length;
+                document.getElementById('notifBadge').textContent = alerts.length;
+                document.getElementById('notifBadge').style.display = alerts.length > 0 ? '' : 'none';
+                document.getElementById('bellDot').style.display = alerts.length > 0 ? '' : 'none';
+            }
+        };
+
+        // ============================================
+        // INITIALIZE
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            ToastManager.init();
+            ModalManager.init();
+            SearchPage.init();
+
+            // Update search count
+            document.getElementById('searchCount').textContent = NEWS_DATA.length;
+
+            console.log('🚀 NewsFlow Search Page loaded successfully!');
+        });
+    </script>
+</body>
+</html>
