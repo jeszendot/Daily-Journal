@@ -1,0 +1,2046 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alerts - NewsFlow</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ============================================
+           CSS VARIABLES - BLUE THEME (EMBEDDED)
+           ============================================ */
+        :root {
+            --primary-50: #EFF5FC;
+            --primary-100: #DCE9F7;
+            --primary-200: #B7D2EF;
+            --primary-300: #86B2E2;
+            --primary-400: #5590D2;
+            --primary-500: #2F6FBB;
+            --primary-600: #1E5399;
+            --primary-700: #163E78;
+            --primary-800: #102C58;
+            --primary-900: #0B1F3F;
+
+            --accent-cyan: #0E7490;
+            --accent-cyan-bg: #E0F6FA;
+            --accent-indigo: #3F3F9E;
+            --accent-indigo-bg: #E7E7F7;
+            --accent-navy: #14335C;
+            --accent-navy-bg: #DDE6F1;
+
+            --success: #0F8A6B;
+            --success-bg: #DDF3EC;
+            --danger: #C0362C;
+            --danger-bg: #FBE6E4;
+            --warning: #B5750F;
+            --warning-bg: #FBF0DC;
+            --info: #2F6FBB;
+            --info-bg: #DCE9F7;
+
+            --gray-50: #F6F8FB;
+            --gray-100: #EEF2F7;
+            --gray-200: #E0E6EE;
+            --gray-300: #C7D0DC;
+            --gray-400: #93A1B4;
+            --gray-500: #64748F;
+            --gray-600: #47536A;
+            --gray-700: #303A4D;
+            --gray-800: #1B2436;
+            --gray-900: #0D1420;
+
+            --shadow: 0 1px 3px 0 rgba(11, 31, 63, 0.08);
+            --shadow-md: 0 4px 10px -2px rgba(11, 31, 63, 0.12);
+            --shadow-lg: 0 12px 24px -6px rgba(11, 31, 63, 0.16);
+            --shadow-xl: 0 22px 40px -8px rgba(11, 31, 63, 0.20);
+            --radius: 10px;
+            --radius-sm: 7px;
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ============================================
+           RESET & BASE
+           ============================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-800);
+            min-height: 100vh;
+        }
+
+        /* ============================================
+           APP LAYOUT
+           ============================================ */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ============================================
+           SIDEBAR
+           ============================================ */
+        .sidebar {
+            width: 280px;
+            background: white;
+            border-right: 1px solid var(--gray-200);
+            border-top: 3px solid var(--primary-800);
+            padding: 24px 16px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            overflow-y: auto;
+            z-index: 100;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 12px 24px 12px;
+            border-bottom: 1px solid var(--gray-200);
+            margin-bottom: 24px;
+        }
+
+        .sidebar-brand .logo {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, var(--primary-700), var(--primary-900));
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            box-shadow: 0 4px 12px rgba(11, 31, 63, 0.35);
+        }
+
+        .sidebar-brand .brand-text h1 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary-900);
+            letter-spacing: 0.2px;
+        }
+
+        .sidebar-brand .brand-text span {
+            color: var(--gray-500);
+            font-size: 11px;
+            display: block;
+            margin-top: -2px;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            flex: 1;
+        }
+
+        .sidebar-nav .nav-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--gray-400);
+            padding: 16px 12px 8px 12px;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: var(--radius-sm);
+            color: var(--gray-600);
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .sidebar-nav a:hover {
+            background: var(--primary-50);
+            color: var(--primary-700);
+        }
+
+        .sidebar-nav a.active {
+            background: var(--primary-50);
+            color: var(--primary-700);
+        }
+
+        .sidebar-nav a.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            bottom: 8px;
+            width: 3px;
+            background: var(--primary-600);
+            border-radius: 0 4px 4px 0;
+        }
+
+        .sidebar-nav a i {
+            width: 20px;
+            text-align: center;
+            font-size: 16px;
+            color: var(--gray-400);
+            transition: var(--transition);
+        }
+
+        .sidebar-nav a:hover i,
+        .sidebar-nav a.active i {
+            color: var(--primary-600);
+        }
+
+        .sidebar-nav a .badge {
+            margin-left: auto;
+            background: var(--danger);
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 10px;
+            border-radius: 20px;
+            line-height: 1.6;
+        }
+
+        .sidebar-nav a .badge.success {
+            background: var(--success);
+        }
+
+        .sidebar-footer {
+            padding-top: 24px;
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .sidebar-footer a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: var(--radius-sm);
+            color: var(--gray-500);
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .sidebar-footer a:hover {
+            background: var(--gray-50);
+            color: var(--gray-700);
+        }
+
+        .sidebar-footer a i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* ============================================
+           MAIN CONTENT
+           ============================================ */
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
+            padding: 24px 32px 32px 32px;
+        }
+
+        /* ============================================
+           TOP BAR
+           ============================================ */
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--gray-200);
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .topbar-left h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .topbar-left .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--gray-500);
+            font-size: 13px;
+        }
+
+        .topbar-left .breadcrumb a {
+            color: var(--primary-600);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .topbar-left .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .topbar-right .search-btn {
+            padding: 8px 16px;
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--gray-500);
+            font-size: 13px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .topbar-right .search-btn:hover {
+            border-color: var(--primary-400);
+            background: var(--primary-50);
+        }
+
+        .topbar-right .notification-bell {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border-radius: 50%;
+            border: 1px solid var(--gray-200);
+            color: var(--gray-600);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .topbar-right .notification-bell:hover {
+            background: var(--primary-50);
+            border-color: var(--primary-300);
+            color: var(--primary-600);
+        }
+
+        .topbar-right .notification-bell .dot {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 8px;
+            height: 8px;
+            background: var(--danger);
+            border-radius: 50%;
+            border: 2px solid white;
+            animation: pulse-dot 2s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+        }
+
+        .topbar-right .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-900));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+
+        .topbar-right .user-avatar:hover {
+            border-color: var(--primary-300);
+            transform: scale(1.05);
+        }
+
+        .menu-toggle {
+            display: none;
+            width: 40px;
+            height: 40px;
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-sm);
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: var(--gray-600);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .menu-toggle:hover {
+            background: var(--gray-50);
+        }
+
+        .mobile-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.5);
+            z-index: 90;
+        }
+
+        .mobile-overlay.active {
+            display: block;
+        }
+
+        /* ============================================
+           ALERTS PAGE STYLES
+           ============================================ */
+        .alerts-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .alerts-header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+        .alerts-header .actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .create-alert-btn {
+            padding: 10px 24px;
+            background: var(--primary-600);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+        .create-alert-btn:hover {
+            background: var(--primary-700);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        .filter-btn {
+            padding: 10px 24px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+        .filter-btn.outline {
+            background: transparent;
+            color: var(--gray-600);
+            border: 1px solid var(--gray-200);
+        }
+        .filter-btn.outline:hover {
+            background: var(--gray-50);
+            border-color: var(--gray-300);
+        }
+
+        .alert-card {
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            margin-bottom: 12px;
+            transition: var(--transition);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .alert-card:hover {
+            border-color: var(--primary-300);
+            box-shadow: var(--shadow);
+        }
+        .alert-card .alert-info {
+            flex: 1;
+            min-width: 200px;
+        }
+        .alert-card .alert-info .alert-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+        .alert-card .alert-info .alert-details {
+            font-size: 13px;
+            color: var(--gray-500);
+            margin-top: 4px;
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .alert-card .alert-info .alert-details .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .alert-card .alert-status {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .alert-card .alert-status .status-badge {
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .alert-card .alert-status .status-badge.active {
+            background: var(--success-bg);
+            color: var(--success);
+        }
+        .alert-card .alert-status .status-badge.inactive {
+            background: var(--gray-200);
+            color: var(--gray-500);
+        }
+        .alert-card .alert-actions {
+            display: flex;
+            gap: 6px;
+        }
+        .alert-card .alert-actions button {
+            width: 34px;
+            height: 34px;
+            border: none;
+            border-radius: var(--radius-sm);
+            background: transparent;
+            color: var(--gray-400);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .alert-card .alert-actions button:hover {
+            background: var(--gray-100);
+            color: var(--gray-600);
+        }
+        .alert-card .alert-actions button.edit:hover {
+            background: var(--primary-100);
+            color: var(--primary-600);
+        }
+        .alert-card .alert-actions button.delete:hover {
+            background: var(--danger-bg);
+            color: var(--danger);
+        }
+        .alert-card .alert-actions button.toggle:hover {
+            background: var(--success-bg);
+            color: var(--success);
+        }
+        .alert-card.active-alert {
+            border-left: 4px solid var(--success);
+        }
+        .alert-card .alert-trigger-count {
+            font-size: 12px;
+            color: var(--gray-400);
+            margin-top: 2px;
+        }
+        .empty-alerts {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--gray-400);
+        }
+        .empty-alerts i {
+            font-size: 48px;
+            display: block;
+            margin-bottom: 16px;
+            color: var(--gray-300);
+        }
+        .empty-alerts h3 {
+            color: var(--gray-600);
+            margin-bottom: 4px;
+        }
+        .empty-alerts p {
+            color: var(--gray-400);
+        }
+
+        /* Triggers Table */
+        .triggers-table-wrapper {
+            background: white;
+            border-radius: var(--radius);
+            border: 1px solid var(--gray-200);
+            overflow: hidden;
+        }
+        .triggers-table-wrapper table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .triggers-table-wrapper thead {
+            background: var(--gray-50);
+        }
+        .triggers-table-wrapper thead th {
+            text-align: left;
+            padding: 12px 16px;
+            font-size: 12px;
+            text-transform: uppercase;
+            color: var(--gray-500);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .triggers-table-wrapper tbody td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--gray-100);
+            font-size: 14px;
+            color: var(--gray-700);
+        }
+        .triggers-table-wrapper tbody tr:last-child td {
+            border-bottom: none;
+        }
+        .triggers-table-wrapper tbody tr:hover {
+            background: var(--gray-50);
+        }
+        .triggers-table-wrapper .no-triggers {
+            padding: 20px;
+            text-align: center;
+            color: var(--gray-400);
+        }
+
+        /* ============================================
+           NOTIFICATION PANEL
+           ============================================ */
+        .notification-panel {
+            position: fixed;
+            top: 0;
+            right: -420px;
+            width: 400px;
+            height: 100%;
+            background: white;
+            box-shadow: var(--shadow-lg);
+            z-index: 200;
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+        }
+        .notification-panel.open {
+            right: 0;
+        }
+        .notification-panel .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        .notification-panel .panel-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .notification-panel .panel-header h3 .count {
+            background: var(--primary-100);
+            color: var(--primary-700);
+            font-size: 13px;
+            padding: 1px 10px;
+            border-radius: 20px;
+        }
+        .notification-panel .panel-header .close-btn {
+            width: 36px;
+            height: 36px;
+            border: none;
+            border-radius: 50%;
+            background: var(--gray-100);
+            color: var(--gray-600);
+            font-size: 18px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .notification-panel .panel-header .close-btn:hover {
+            background: var(--gray-200);
+        }
+        .notification-panel .panel-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 24px;
+        }
+        .notification-item {
+            display: flex;
+            gap: 14px;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--gray-100);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        .notification-item:hover {
+            background: var(--gray-50);
+            margin: 0 -12px;
+            padding: 14px 12px;
+            border-radius: var(--radius-sm);
+        }
+        .notification-item .notif-icon {
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+        .notification-item .notif-icon.breaking {
+            background: var(--danger-bg);
+            color: var(--danger);
+        }
+        .notification-item .notif-icon.update {
+            background: var(--primary-100);
+            color: var(--primary-600);
+        }
+        .notification-item .notif-content {
+            flex: 1;
+        }
+        .notification-item .notif-content .notif-title {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--gray-800);
+        }
+        .notification-item .notif-content .notif-body {
+            font-size: 13px;
+            color: var(--gray-500);
+            margin-top: 2px;
+        }
+        .notification-item .notif-content .notif-time {
+            font-size: 12px;
+            color: var(--gray-400);
+            margin-top: 4px;
+        }
+        .notification-item .notif-unread {
+            width: 8px;
+            height: 8px;
+            min-width: 8px;
+            background: var(--primary-500);
+            border-radius: 50%;
+            margin-top: 6px;
+        }
+        .panel-footer {
+            padding: 16px 24px;
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            gap: 12px;
+        }
+        .panel-footer button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 14px;
+        }
+        .panel-footer .mark-all {
+            background: var(--primary-50);
+            color: var(--primary-600);
+        }
+        .panel-footer .mark-all:hover {
+            background: var(--primary-100);
+        }
+        .panel-footer .view-all {
+            background: var(--primary-600);
+            color: white;
+        }
+        .panel-footer .view-all:hover {
+            background: var(--primary-700);
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.4);
+            z-index: 150;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            backdrop-filter: blur(4px);
+        }
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* ============================================
+           TOAST
+           ============================================ */
+        .toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 300;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 450px;
+            width: 100%;
+        }
+        .toast {
+            padding: 16px 20px;
+            background: var(--gray-900);
+            color: white;
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideInRight 0.4s ease forwards;
+            width: 100%;
+        }
+        .toast.success { border-left: 4px solid var(--success); }
+        .toast.error { border-left: 4px solid var(--danger); }
+        .toast.warning { border-left: 4px solid var(--warning); }
+        .toast.info { border-left: 4px solid var(--primary-400); }
+        .toast .toast-icon { font-size: 20px; }
+        .toast.success .toast-icon { color: var(--success); }
+        .toast.error .toast-icon { color: var(--danger); }
+        .toast.warning .toast-icon { color: var(--warning); }
+        .toast.info .toast-icon { color: var(--primary-400); }
+        .toast .toast-content { flex: 1; }
+        .toast .toast-content .toast-title {
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .toast .toast-content .toast-message {
+            font-size: 13px;
+            opacity: 0.8;
+            margin-top: 2px;
+        }
+        .toast .toast-close {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.5);
+            cursor: pointer;
+            font-size: 16px;
+            padding: 4px;
+            transition: var(--transition);
+        }
+        .toast .toast-close:hover { color: white; }
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .toast.removing {
+            animation: slideOutRight 0.3s ease forwards;
+        }
+        @keyframes slideOutRight {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+
+        /* ============================================
+           MODAL
+           ============================================ */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.6);
+            z-index: 250;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal {
+            background: white;
+            border-radius: var(--radius);
+            padding: 32px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: var(--shadow-xl);
+            animation: fadeInUp 0.3s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .modal .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .modal .modal-header h3 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+        .modal .modal-header .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--gray-400);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .modal .modal-header .modal-close:hover {
+            color: var(--gray-600);
+        }
+        .modal .modal-body {
+            color: var(--gray-600);
+            line-height: 1.8;
+            margin-bottom: 24px;
+        }
+        .modal .modal-body .form-group {
+            margin-bottom: 16px;
+        }
+        .modal .modal-body .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 4px;
+            font-size: 14px;
+            color: var(--gray-700);
+        }
+        .modal .modal-body .form-group label i {
+            color: var(--primary-600);
+            margin-right: 4px;
+        }
+        .modal .modal-body .form-group input,
+        .modal .modal-body .form-group select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            background: var(--gray-50);
+            transition: var(--transition);
+            color: var(--gray-700);
+        }
+        .modal .modal-body .form-group input:focus,
+        .modal .modal-body .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-400);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(30, 83, 153, 0.12);
+        }
+        .modal .modal-footer {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+        .modal .modal-footer button {
+            padding: 10px 24px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .modal .modal-footer .btn-secondary {
+            background: var(--gray-100);
+            color: var(--gray-700);
+        }
+        .modal .modal-footer .btn-secondary:hover {
+            background: var(--gray-200);
+        }
+        .modal .modal-footer .btn-primary {
+            background: var(--primary-600);
+            color: white;
+        }
+        .modal .modal-footer .btn-primary:hover {
+            background: var(--primary-700);
+        }
+        .modal .modal-footer .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+        .modal .modal-footer .btn-danger:hover {
+            background: #DC2626;
+        }
+        .modal .modal-footer .btn-success {
+            background: var(--success);
+            color: white;
+        }
+        .modal .modal-footer .btn-success:hover {
+            background: #059669;
+        }
+
+        /* ============================================
+           RESPONSIVE
+           ============================================ */
+        @media (max-width: 1024px) {
+            .main-content {
+                padding: 20px;
+            }
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 16px;
+            }
+            .menu-toggle {
+                display: flex !important;
+            }
+            .topbar {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+            .topbar-right {
+                justify-content: flex-end;
+            }
+            .alert-card {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .alert-card .alert-status {
+                justify-content: space-between;
+            }
+            .alerts-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .triggers-table-wrapper {
+                overflow-x: auto;
+            }
+            .notification-panel {
+                width: 100%;
+                right: -100%;
+            }
+            .toast-container {
+                bottom: 12px;
+                right: 12px;
+                left: 12px;
+                max-width: 100%;
+            }
+            .modal {
+                padding: 24px;
+                max-width: 95%;
+            }
+        }
+        @media (max-width: 480px) {
+            .topbar-left h2 {
+                font-size: 20px;
+            }
+            .alerts-header h1 {
+                font-size: 20px;
+            }
+            .create-alert-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            .filter-btn.outline {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* ============================================
+           SCROLLBAR
+           ============================================ */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--gray-100);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--gray-300);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gray-400);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container" id="app">
+
+        <!-- ============================================
+        SIDEBAR
+        ============================================ -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+                <div class="logo"><i class="fas fa-newspaper"></i></div>
+                <div class="brand-text">
+                    <h1>Daily Journal</h1>
+                    <span>News Alert</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-label">Main</div>
+                <a href="dashboard.html" data-page="dashboard">
+                    <i class="fas fa-th-large"></i> Dashboard
+                </a>
+                <a href="search-news.html" data-page="search">
+                    <i class="fas fa-search"></i> Search News
+                    <span class="badge success" id="searchCount">12</span>
+                </a>
+                <a href="alerts.html" class="active" data-page="notifications">
+                    <i class="fas fa-bell"></i> Alerts
+                    <span class="badge" id="notifBadge">0</span>
+                </a>
+
+                <div class="nav-label">Categories</div>
+                <a href="category-technology.html" data-page="technology">
+                    <i class="fas fa-microchip"></i> Technology
+                </a>
+                <a href="category-business.html" data-page="business">
+                    <i class="fas fa-chart-line"></i> Business
+                </a>
+                <a href="category-sports.html" data-page="sports">
+                    <i class="fas fa-futbol"></i> Sports
+                </a>
+                <a href="category-entertainment.html" data-page="entertainment">
+                    <i class="fas fa-film"></i> Entertainment
+                </a>
+                <a href="category-health.html" data-page="health">
+                    <i class="fas fa-heartbeat"></i> Health
+                </a>
+
+                <div class="nav-label">Settings</div>
+                <a href="preferences.html" data-page="preferences">
+                    <i class="fas fa-sliders-h"></i> Preferences
+                </a>
+                <a href="sources.html" data-page="sources">
+                    <i class="fas fa-rss"></i> News Sources
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="help.html" data-page="help">
+                    <i class="fas fa-question-circle"></i> Help & Support
+                </a>
+                <a href="#" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        </aside>
+
+        <!-- MOBILE OVERLAY -->
+        <div class="mobile-overlay" id="mobileOverlay"></div>
+
+        <!-- ============================================
+        MAIN CONTENT
+        ============================================ -->
+        <main class="main-content">
+
+            <!-- TOP BAR -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button class="menu-toggle" id="menuToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div>
+                        <h2 id="pageTitle">Alerts</h2>
+                        <div class="breadcrumb">
+                            <a href="dashboard.html">Home</a>
+                            <span>/</span>
+                            <span id="breadcrumbCurrent">Alerts</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="topbar-right">
+                    <button class="search-btn" id="quickSearchBtn">
+                        <i class="fas fa-search"></i> Quick Search <span style="font-size: 11px; opacity: 0.6;">(Ctrl+K)</span>
+                    </button>
+                    <div class="notification-bell" id="bellIcon">
+                        <i class="fas fa-bell"></i>
+                        <span class="dot" id="bellDot"></span>
+                    </div>
+                    <div class="user-avatar" id="userAvatar">JD</div>
+                </div>
+            </header>
+
+            <!-- ============================================
+            ALERTS HEADER
+            ============================================ -->
+            <div class="alerts-header">
+                <div>
+                    <h1>🔔 News Alerts</h1>
+                    <p style="color: var(--gray-500); font-size: 14px;">
+                        <span id="totalAlerts">0</span> active alerts monitoring your topics
+                    </p>
+                </div>
+                <div class="actions">
+                    <button class="create-alert-btn" id="createAlertBtn">
+                        <i class="fas fa-plus"></i> Create Alert
+                    </button>
+                    <button class="filter-btn outline" id="refreshAlertsBtn">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+            </div>
+
+            <!-- ============================================
+            ALERTS LIST
+            ============================================ -->
+            <div id="alertsList">
+                <!-- Alerts will be rendered by JavaScript -->
+            </div>
+
+            <!-- ============================================
+            RECENT TRIGGERS
+            ============================================ -->
+            <div style="margin-top: 32px;">
+                <h3 style="font-size: 16px; font-weight: 600; color: var(--gray-700); margin-bottom: 16px;">
+                    <i class="fas fa-clock"></i> Recent Alert Triggers
+                </h3>
+                <div class="triggers-table-wrapper" id="recentTriggers">
+                    <!-- Triggers rendered here -->
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- ============================================
+    NOTIFICATION PANEL
+    ============================================ -->
+    <div class="overlay" id="panelOverlay"></div>
+    <div class="notification-panel" id="notificationPanel">
+        <div class="panel-header">
+            <h3>
+                <i class="fas fa-bell" style="color:var(--primary-600);"></i> News Alerts
+                <span class="count" id="panelNotifCount">0 new</span>
+            </h3>
+            <button class="close-btn" id="closePanel"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="panel-body" id="notificationPanelBody">
+            <!-- Rendered by JavaScript -->
+        </div>
+        <div class="panel-footer">
+            <button class="mark-all" id="markAllReadBtn">
+                <i class="fas fa-check-double"></i> Mark all read
+            </button>
+            <button class="view-all" id="viewAllNotifsBtn">View all alerts</button>
+        </div>
+    </div>
+
+    <!-- ============================================
+    TOAST CONTAINER
+    ============================================ -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- ============================================
+    MODAL
+    ============================================ -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal" id="modal">
+            <div class="modal-header">
+                <h3 id="modalTitle">Modal Title</h3>
+                <button class="modal-close" id="modalClose">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Modal content -->
+            </div>
+            <div class="modal-footer" id="modalFooter">
+                <!-- Modal buttons -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================
+    JAVASCRIPT - EMBEDDED
+    ============================================ -->
+    <script>
+        // ============================================
+        // DATA
+        // ============================================
+        const NEWS_DATA = [
+            { id: 1, title: 'AI Breakthrough in Medical Diagnosis', category: 'technology', source: 'cnn', published: '2 hours ago', timestamp: Date.now() - 7200000, status: 'breaking', summary: 'Researchers developed a new AI model that outperforms human doctors.', author: 'Sarah Chen' },
+            { id: 2, title: 'Global Markets Rally as Inflation Cools', category: 'business', source: 'reuters', published: '4 hours ago', timestamp: Date.now() - 14400000, status: 'published', summary: 'Stock markets surged after new data suggested inflation may be peaking.', author: 'Mike Johnson' },
+            { id: 3, title: 'Champions League Final: Underdogs Stun Favorites', category: 'sports', source: 'bbc', published: '6 hours ago', timestamp: Date.now() - 21600000, status: 'published', summary: 'In one of the greatest upsets in Champions League history.', author: 'Emma Wilson' },
+            { id: 4, title: 'New Cancer Treatment Shows Promise', category: 'health', source: 'ap', published: '8 hours ago', timestamp: Date.now() - 28800000, status: 'breaking', summary: 'Scientists discovered a new approach that could revolutionize cancer treatment.', author: 'Alex Rivera' },
+            { id: 5, title: 'Hollywood Strike Ends with Historic Deal', category: 'entertainment', source: 'nytimes', published: '12 hours ago', timestamp: Date.now() - 43200000, status: 'published', summary: 'Writers Guild reached a tentative agreement with studios.', author: 'Lisa Park' }
+        ];
+
+        const CATEGORY_ICONS = {
+            technology: 'fa-microchip',
+            business: 'fa-chart-line',
+            sports: 'fa-futbol',
+            entertainment: 'fa-film',
+            health: 'fa-heartbeat',
+            politics: 'fa-landmark',
+            science: 'fa-flask'
+        };
+
+        const CATEGORY_COLORS = {
+            technology: '#1E5399',
+            business: '#0F8A6B',
+            sports: '#B5750F',
+            entertainment: '#C0362C',
+            health: '#2F6FBB',
+            politics: '#47536A',
+            science: '#5590D2'
+        };
+
+        const SOURCE_NAMES = {
+            cnn: 'CNN',
+            bbc: 'BBC',
+            reuters: 'Reuters',
+            ap: 'Associated Press',
+            nytimes: 'NY Times',
+            guardian: 'The Guardian'
+        };
+
+        const SOURCE_COLORS = {
+            cnn: '#CC0000',
+            bbc: '#B80000',
+            reuters: '#FF8000',
+            ap: '#333333',
+            nytimes: '#D4A017',
+            guardian: '#052962'
+        };
+
+        // ============================================
+        // TOAST MANAGER
+        // ============================================
+        const ToastManager = {
+            container: null,
+            idCounter: 0,
+
+            init() {
+                this.container = document.getElementById('toastContainer');
+            },
+
+            show(options) {
+                const { title = 'Notification', message = '', type = 'info', duration = 4000 } = options;
+                const id = ++this.idCounter;
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                toast.dataset.id = id;
+
+                const iconMap = {
+                    success: 'fa-check-circle',
+                    error: 'fa-exclamation-circle',
+                    warning: 'fa-exclamation-triangle',
+                    info: 'fa-info-circle'
+                };
+
+                toast.innerHTML = `
+                    <div class="toast-icon"><i class="fas ${iconMap[type] || iconMap.info}"></i></div>
+                    <div class="toast-content">
+                        <div class="toast-title">${title}</div>
+                        <div class="toast-message">${message}</div>
+                    </div>
+                    <button class="toast-close" data-id="${id}"><i class="fas fa-times"></i></button>
+                `;
+
+                this.container.appendChild(toast);
+
+                const timeout = setTimeout(() => this.remove(id), duration);
+                toast.querySelector('.toast-close').addEventListener('click', () => {
+                    clearTimeout(timeout);
+                    this.remove(id);
+                });
+
+                return id;
+            },
+
+            remove(id) {
+                const toast = this.container.querySelector(`[data-id="${id}"]`);
+                if (toast) {
+                    toast.classList.add('removing');
+                    setTimeout(() => toast.remove(), 300);
+                }
+            },
+
+            success(title, message, duration) { return this.show({ title, message, type: 'success', duration }); },
+            error(title, message, duration) { return this.show({ title, message, type: 'error', duration }); },
+            warning(title, message, duration) { return this.show({ title, message, type: 'warning', duration }); },
+            info(title, message, duration) { return this.show({ title, message, type: 'info', duration }); }
+        };
+
+        // ============================================
+        // MODAL MANAGER
+        // ============================================
+        const ModalManager = {
+            overlay: null,
+            modal: null,
+            title: null,
+            body: null,
+            footer: null,
+            closeBtn: null,
+            callbacks: {},
+
+            init() {
+                this.overlay = document.getElementById('modalOverlay');
+                this.modal = document.getElementById('modal');
+                this.title = document.getElementById('modalTitle');
+                this.body = document.getElementById('modalBody');
+                this.footer = document.getElementById('modalFooter');
+                this.closeBtn = document.getElementById('modalClose');
+
+                this.closeBtn.addEventListener('click', () => this.close());
+                this.overlay.addEventListener('click', (e) => {
+                    if (e.target === this.overlay) this.close();
+                });
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') this.close();
+                });
+            },
+
+            open(options) {
+                const {
+                    title = 'Modal',
+                    content = '',
+                    onClose = null,
+                    onConfirm = null,
+                    confirmText = 'Confirm',
+                    cancelText = 'Cancel',
+                    showConfirm = true,
+                    showCancel = true,
+                    danger = false,
+                    success = false
+                } = options;
+
+                this.title.textContent = title;
+                this.body.innerHTML = content;
+
+                let footerHTML = '';
+                if (showCancel) {
+                    footerHTML += `<button class="btn-secondary" id="modalCancel">${cancelText}</button>`;
+                }
+                if (showConfirm) {
+                    let btnClass = 'btn-primary';
+                    if (danger) btnClass = 'btn-danger';
+                    if (success) btnClass = 'btn-success';
+                    footerHTML += `<button class="${btnClass}" id="modalConfirm">${confirmText}</button>`;
+                }
+                this.footer.innerHTML = footerHTML;
+
+                this.callbacks.onClose = onClose;
+                this.callbacks.onConfirm = onConfirm;
+
+                const cancelBtn = document.getElementById('modalCancel');
+                const confirmBtn = document.getElementById('modalConfirm');
+
+                if (cancelBtn) {
+                    cancelBtn.addEventListener('click', () => this.close());
+                }
+                if (confirmBtn) {
+                    confirmBtn.addEventListener('click', () => {
+                        if (this.callbacks.onConfirm) this.callbacks.onConfirm();
+                        this.close();
+                    });
+                }
+
+                this.overlay.classList.add('active');
+            },
+
+            close() {
+                this.overlay.classList.remove('active');
+                if (this.callbacks.onClose) this.callbacks.onClose();
+            },
+
+            showCreateAlert(onConfirm) {
+                const content = `
+                    <div class="form-group">
+                        <label><i class="fas fa-tag"></i> Alert Name</label>
+                        <input type="text" id="modalAlertName" placeholder="e.g., Breaking Tech News">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-filter"></i> Category</label>
+                        <select id="modalAlertCategory">
+                            <option value="all">All Categories</option>
+                            <option value="technology">Technology</option>
+                            <option value="business">Business</option>
+                            <option value="sports">Sports</option>
+                            <option value="entertainment">Entertainment</option>
+                            <option value="health">Health</option>
+                            <option value="politics">Politics</option>
+                            <option value="science">Science</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-rss"></i> Source</label>
+                        <select id="modalAlertSource">
+                            <option value="all">All Sources</option>
+                            <option value="cnn">CNN</option>
+                            <option value="bbc">BBC</option>
+                            <option value="reuters">Reuters</option>
+                            <option value="ap">Associated Press</option>
+                            <option value="nytimes">NY Times</option>
+                            <option value="guardian">The Guardian</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-keyword"></i> Keywords (comma separated)</label>
+                        <input type="text" id="modalAlertKeywords" placeholder="e.g., AI, technology, breakthrough">
+                    </div>
+                `;
+
+                this.open({
+                    title: '🔔 Create News Alert',
+                    content,
+                    confirmText: 'Create Alert',
+                    success: true,
+                    onConfirm: () => {
+                        const name = document.getElementById('modalAlertName').value.trim();
+                        const category = document.getElementById('modalAlertCategory').value;
+                        const source = document.getElementById('modalAlertSource').value;
+                        const keywords = document.getElementById('modalAlertKeywords').value.trim();
+
+                        if (!name) {
+                            ToastManager.error('Error', 'Please enter an alert name');
+                            return;
+                        }
+
+                        if (onConfirm) {
+                            onConfirm({ name, category, source, keywords });
+                        }
+                    }
+                });
+            },
+
+            showEditAlert(alert, onConfirm) {
+                const content = `
+                    <div class="form-group">
+                        <label><i class="fas fa-tag"></i> Alert Name</label>
+                        <input type="text" id="modalEditName" value="${alert.name}">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-filter"></i> Category</label>
+                        <select id="modalEditCategory">
+                            <option value="all" ${alert.category === 'all' ? 'selected' : ''}>All Categories</option>
+                            <option value="technology" ${alert.category === 'technology' ? 'selected' : ''}>Technology</option>
+                            <option value="business" ${alert.category === 'business' ? 'selected' : ''}>Business</option>
+                            <option value="sports" ${alert.category === 'sports' ? 'selected' : ''}>Sports</option>
+                            <option value="entertainment" ${alert.category === 'entertainment' ? 'selected' : ''}>Entertainment</option>
+                            <option value="health" ${alert.category === 'health' ? 'selected' : ''}>Health</option>
+                            <option value="politics" ${alert.category === 'politics' ? 'selected' : ''}>Politics</option>
+                            <option value="science" ${alert.category === 'science' ? 'selected' : ''}>Science</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-rss"></i> Source</label>
+                        <select id="modalEditSource">
+                            <option value="all" ${alert.source === 'all' ? 'selected' : ''}>All Sources</option>
+                            <option value="cnn" ${alert.source === 'cnn' ? 'selected' : ''}>CNN</option>
+                            <option value="bbc" ${alert.source === 'bbc' ? 'selected' : ''}>BBC</option>
+                            <option value="reuters" ${alert.source === 'reuters' ? 'selected' : ''}>Reuters</option>
+                            <option value="ap" ${alert.source === 'ap' ? 'selected' : ''}>Associated Press</option>
+                            <option value="nytimes" ${alert.source === 'nytimes' ? 'selected' : ''}>NY Times</option>
+                            <option value="guardian" ${alert.source === 'guardian' ? 'selected' : ''}>The Guardian</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-keyword"></i> Keywords (comma separated)</label>
+                        <input type="text" id="modalEditKeywords" value="${alert.keywords}" placeholder="e.g., AI, technology, breakthrough">
+                    </div>
+                `;
+
+                this.open({
+                    title: '✏️ Edit Alert',
+                    content,
+                    confirmText: 'Save Changes',
+                    success: true,
+                    onConfirm: () => {
+                        const name = document.getElementById('modalEditName').value.trim();
+                        const category = document.getElementById('modalEditCategory').value;
+                        const source = document.getElementById('modalEditSource').value;
+                        const keywords = document.getElementById('modalEditKeywords').value.trim();
+
+                        if (!name) {
+                            ToastManager.error('Error', 'Please enter an alert name');
+                            return;
+                        }
+
+                        if (onConfirm) {
+                            onConfirm({ name, category, source, keywords });
+                        }
+                    }
+                });
+            },
+
+            showDeleteConfirm(onConfirm) {
+                this.open({
+                    title: '🗑️ Delete Alert',
+                    content: `<p>Are you sure you want to delete this alert?</p><p style="color: var(--gray-500); font-size: 14px;">This action cannot be undone.</p>`,
+                    confirmText: 'Delete',
+                    danger: true,
+                    onConfirm
+                });
+            }
+        };
+
+        // ============================================
+        // ALERTS PAGE CONTROLLER
+        // ============================================
+        const AlertsPage = {
+            alerts: [],
+            triggers: [],
+
+            init() {
+                this.loadAlerts();
+                this.loadTriggers();
+                this.bindEvents();
+                this.renderAlerts();
+                this.renderTriggers();
+                this.setupNotificationPanel();
+                console.log('🔔 Alerts page initialized with', this.alerts.length, 'alerts');
+            },
+
+            loadAlerts() {
+                const saved = localStorage.getItem('newsflow_alerts');
+                if (saved) {
+                    try {
+                        this.alerts = JSON.parse(saved);
+                        return;
+                    } catch (e) {
+                        console.error('Error loading alerts:', e);
+                    }
+                }
+                // Default alerts
+                this.alerts = [
+                    { id: 1, name: 'Breaking Technology News', category: 'technology', source: 'all', keywords: 'AI, breakthrough, innovation', status: 'active', createdAt: Date.now() - 86400000, triggerCount: 12 },
+                    { id: 2, name: 'Sports Highlights', category: 'sports', source: 'all', keywords: 'championship, final, win', status: 'active', createdAt: Date.now() - 172800000, triggerCount: 8 },
+                    { id: 3, name: 'Business & Markets', category: 'business', source: 'reuters', keywords: 'market, stock, inflation', status: 'active', createdAt: Date.now() - 259200000, triggerCount: 15 },
+                    { id: 4, name: 'Health Research', category: 'health', source: 'all', keywords: 'cancer, treatment, study', status: 'inactive', createdAt: Date.now() - 345600000, triggerCount: 6 }
+                ];
+                this.saveAlerts();
+            },
+
+            saveAlerts() {
+                try {
+                    localStorage.setItem('newsflow_alerts', JSON.stringify(this.alerts));
+                } catch (e) {
+                    console.error('Error saving alerts:', e);
+                }
+            },
+
+            loadTriggers() {
+                // Generate triggers from news data
+                this.triggers = NEWS_DATA
+                    .filter(n => n.status === 'breaking' || n.status === 'published')
+                    .slice(0, 10)
+                    .map(n => ({
+                        id: n.id,
+                        title: n.title,
+                        category: n.category,
+                        source: n.source,
+                        published: n.published,
+                        timestamp: n.timestamp,
+                        matchedAlert: this.findMatchingAlert(n)
+                    }));
+            },
+
+            findMatchingAlert(article) {
+                for (const alert of this.alerts) {
+                    if (alert.status !== 'active') continue;
+                    if (alert.category !== 'all' && alert.category !== article.category) continue;
+                    if (alert.source !== 'all' && alert.source !== article.source) continue;
+                    if (alert.keywords) {
+                        const keywords = alert.keywords.toLowerCase().split(',').map(k => k.trim());
+                        const text = (article.title + ' ' + article.summary).toLowerCase();
+                        if (keywords.some(k => text.includes(k))) {
+                            return alert.name;
+                        }
+                    }
+                }
+                return null;
+            },
+
+            checkAlertMatches(article) {
+                const matched = this.findMatchingAlert(article);
+                if (matched) {
+                    ToastManager.warning('🔔 Alert Triggered', `"${matched}" matched: ${article.title}`);
+                    const alert = this.alerts.find(a => a.name === matched);
+                    if (alert) {
+                        alert.triggerCount = (alert.triggerCount || 0) + 1;
+                        this.saveAlerts();
+                        this.renderAlerts();
+                    }
+                }
+            },
+
+            bindEvents() {
+                document.getElementById('createAlertBtn').addEventListener('click', () => {
+                    this.showCreateAlert();
+                });
+
+                document.getElementById('refreshAlertsBtn').addEventListener('click', () => {
+                    this.loadTriggers();
+                    this.renderTriggers();
+                    ToastManager.success('Refreshed', 'Alerts and triggers updated');
+                });
+
+                document.getElementById('quickSearchBtn').addEventListener('click', () => {
+                    window.location.href = 'search-news.html';
+                });
+
+                document.getElementById('logoutBtn').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    ModalManager.open({
+                        title: 'Logout',
+                        content: '<p>Are you sure you want to logout?</p>',
+                        confirmText: 'Logout',
+                        danger: true,
+                        onConfirm: () => {
+                            ToastManager.success('Logged Out', 'See you next time!');
+                        }
+                    });
+                });
+
+                document.getElementById('userAvatar').addEventListener('click', () => {
+                    ToastManager.info('Profile', 'Viewing user profile');
+                });
+
+                document.getElementById('bellIcon').addEventListener('click', () => {
+                    document.getElementById('notificationPanel').classList.toggle('open');
+                    document.getElementById('panelOverlay').classList.toggle('active');
+                });
+
+                document.getElementById('closePanel').addEventListener('click', () => {
+                    document.getElementById('notificationPanel').classList.remove('open');
+                    document.getElementById('panelOverlay').classList.remove('active');
+                });
+
+                document.getElementById('panelOverlay').addEventListener('click', () => {
+                    document.getElementById('notificationPanel').classList.remove('open');
+                    document.getElementById('panelOverlay').classList.remove('active');
+                });
+
+                document.getElementById('markAllReadBtn').addEventListener('click', () => {
+                    ToastManager.success('All Read', 'All alerts marked as read');
+                });
+
+                document.getElementById('viewAllNotifsBtn').addEventListener('click', () => {
+                    window.location.href = 'alerts.html';
+                });
+
+                document.getElementById('menuToggle').addEventListener('click', () => {
+                    document.getElementById('sidebar').classList.toggle('open');
+                    document.getElementById('mobileOverlay').classList.toggle('active');
+                });
+
+                document.getElementById('mobileOverlay').addEventListener('click', () => {
+                    document.getElementById('sidebar').classList.remove('open');
+                    document.getElementById('mobileOverlay').classList.remove('active');
+                });
+
+                window.addEventListener('resize', () => {
+                    if (window.innerWidth > 768) {
+                        document.getElementById('sidebar').classList.remove('open');
+                        document.getElementById('mobileOverlay').classList.remove('active');
+                    }
+                });
+            },
+
+            showCreateAlert() {
+                ModalManager.showCreateAlert((data) => {
+                    const newAlert = {
+                        id: Date.now(),
+                        name: data.name,
+                        category: data.category,
+                        source: data.source,
+                        keywords: data.keywords || '',
+                        status: 'active',
+                        createdAt: Date.now(),
+                        triggerCount: 0
+                    };
+                    this.alerts.push(newAlert);
+                    this.saveAlerts();
+                    this.renderAlerts();
+                    ToastManager.success('Alert Created', `"${data.name}" is now active`);
+                });
+            },
+
+            toggleAlert(id) {
+                const alert = this.alerts.find(a => a.id === id);
+                if (alert) {
+                    alert.status = alert.status === 'active' ? 'inactive' : 'active';
+                    this.saveAlerts();
+                    this.renderAlerts();
+                    ToastManager.info(
+                        alert.status === 'active' ? 'Alert Activated' : 'Alert Deactivated',
+                        `"${alert.name}" is now ${alert.status === 'active' ? 'active' : 'inactive'}`
+                    );
+                }
+            },
+
+            editAlert(id) {
+                const alert = this.alerts.find(a => a.id === id);
+                if (!alert) return;
+
+                ModalManager.showEditAlert(alert, (data) => {
+                    alert.name = data.name;
+                    alert.category = data.category;
+                    alert.source = data.source;
+                    alert.keywords = data.keywords;
+                    this.saveAlerts();
+                    this.renderAlerts();
+                    ToastManager.success('Updated', `"${data.name}" has been updated`);
+                });
+            },
+
+            deleteAlert(id) {
+                ModalManager.showDeleteConfirm(() => {
+                    this.alerts = this.alerts.filter(a => a.id !== id);
+                    this.saveAlerts();
+                    this.renderAlerts();
+                    ToastManager.success('Deleted', 'Alert has been removed');
+                });
+            },
+
+            renderAlerts() {
+                const container = document.getElementById('alertsList');
+                const activeCount = this.alerts.filter(a => a.status === 'active').length;
+                document.getElementById('totalAlerts').textContent = activeCount;
+                document.getElementById('notifBadge').textContent = activeCount;
+
+                if (this.alerts.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-alerts">
+                            <i class="fas fa-bell-slash"></i>
+                            <h3>No alerts configured</h3>
+                            <p>Create your first alert to start tracking news topics</p>
+                            <button class="create-alert-btn" style="margin-top: 16px; display: inline-flex;" id="emptyCreateAlert">
+                                <i class="fas fa-plus"></i> Create Alert
+                            </button>
+                        </div>
+                    `;
+                    document.getElementById('emptyCreateAlert')?.addEventListener('click', () => {
+                        this.showCreateAlert();
+                    });
+                    return;
+                }
+
+                container.innerHTML = this.alerts.map(alert => `
+                    <div class="alert-card ${alert.status === 'active' ? 'active-alert' : ''}">
+                        <div class="alert-info">
+                            <div class="alert-name">
+                                ${alert.status === 'active' ? '🔔' : '🔕'} ${alert.name}
+                            </div>
+                            <div class="alert-details">
+                                <span class="detail-item">
+                                    <i class="fas fa-tag" style="color: var(--primary-400);"></i>
+                                    ${alert.category === 'all' ? 'All Categories' : alert.category.charAt(0).toUpperCase() + alert.category.slice(1)}
+                                </span>
+                                <span class="detail-item">
+                                    <i class="fas fa-rss" style="color: var(--primary-400);"></i>
+                                    ${alert.source === 'all' ? 'All Sources' : (SOURCE_NAMES[alert.source] || alert.source)}
+                                </span>
+                                ${alert.keywords ? `
+                                    <span class="detail-item">
+                                        <i class="fas fa-keyword" style="color: var(--primary-400);"></i>
+                                        ${alert.keywords}
+                                    </span>
+                                ` : ''}
+                                <span class="detail-item">
+                                    <i class="fas fa-clock" style="color: var(--primary-400);"></i>
+                                    ${this.formatDate(alert.createdAt)}
+                                </span>
+                            </div>
+                            <div class="alert-trigger-count">
+                                <i class="fas fa-bolt"></i> ${alert.triggerCount || 0} triggers
+                            </div>
+                        </div>
+                        <div class="alert-status">
+                            <span class="status-badge ${alert.status === 'active' ? 'active' : 'inactive'}">
+                                ${alert.status === 'active' ? 'Active' : 'Inactive'}
+                            </span>
+                            <div class="alert-actions">
+                                <button class="toggle" data-id="${alert.id}" title="${alert.status === 'active' ? 'Deactivate' : 'Activate'}">
+                                    <i class="fas ${alert.status === 'active' ? 'fa-pause' : 'fa-play'}"></i>
+                                </button>
+                                <button class="edit" data-id="${alert.id}" title="Edit">
+                                    <i class="fas fa-pen"></i>
+                                </button>
+                                <button class="delete" data-id="${alert.id}" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                container.querySelectorAll('.toggle').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        this.toggleAlert(parseInt(btn.dataset.id));
+                    });
+                });
+                container.querySelectorAll('.edit').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        this.editAlert(parseInt(btn.dataset.id));
+                    });
+                });
+                container.querySelectorAll('.delete').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        this.deleteAlert(parseInt(btn.dataset.id));
+                    });
+                });
+            },
+
+            renderTriggers() {
+                const container = document.getElementById('recentTriggers');
+
+                if (this.triggers.length === 0) {
+                    container.innerHTML = `<div class="no-triggers"><i class="fas fa-bell-slash"></i> No recent triggers</div>`;
+                    return;
+                }
+
+                container.innerHTML = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Article</th>
+                                <th>Category</th>
+                                <th>Source</th>
+                                <th>Matched Alert</th>
+                                <th>Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${this.triggers.map(trigger => `
+                                <tr>
+                                    <td style="font-weight: 500;">${trigger.title}</td>
+                                    <td>
+                                        <span style="padding: 2px 12px; border-radius: 20px; font-size: 12px; background: ${CATEGORY_COLORS[trigger.category] || 'var(--gray-100)'}20; color: ${CATEGORY_COLORS[trigger.category] || 'var(--gray-500)'};">
+                                            ${trigger.category.charAt(0).toUpperCase() + trigger.category.slice(1)}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span style="color: ${SOURCE_COLORS[trigger.source] || 'var(--gray-500)'}; font-weight: 600; font-size: 13px;">
+                                            ${SOURCE_NAMES[trigger.source] || trigger.source}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        ${trigger.matchedAlert ? 
+                                            `<span style="color: var(--success); font-weight: 600;">${trigger.matchedAlert}</span>` : 
+                                            `<span style="color: var(--gray-400); font-size: 13px;">No match</span>`
+                                        }
+                                    </td>
+                                    <td style="color: var(--gray-500); font-size: 13px;">${trigger.published}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+            },
+
+            setupNotificationPanel() {
+                const body = document.getElementById('notificationPanelBody');
+                const alerts = NEWS_DATA.filter(n => n.status === 'breaking' || n.status === 'published').slice(0, 8);
+
+                if (alerts.length === 0) {
+                    body.innerHTML = `
+                        <div style="text-align: center; padding: 40px 0; color: var(--gray-400);">
+                            <i class="fas fa-bell-slash" style="font-size: 32px; display: block; margin-bottom: 12px;"></i>
+                            No new alerts
+                        </div>
+                    `;
+                    return;
+                }
+
+                body.innerHTML = alerts.map(alert => `
+                    <div class="notification-item">
+                        <div class="notif-icon ${alert.status === 'breaking' ? 'breaking' : 'update'}">
+                            <i class="fas ${alert.status === 'breaking' ? 'fa-bolt' : 'fa-newspaper'}"></i>
+                        </div>
+                        <div class="notif-content">
+                            <div class="notif-title">${alert.title}</div>
+                            <div class="notif-body">${alert.summary.substring(0, 80)}...</div>
+                            <div class="notif-time">${alert.published}</div>
+                        </div>
+                        <div class="notif-unread"></div>
+                    </div>
+                `).join('');
+
+                const count = alerts.length;
+                document.getElementById('panelNotifCount').textContent = count + ' new';
+                document.getElementById('notifBadge').textContent = count;
+                document.getElementById('notifBadge').style.display = count > 0 ? '' : 'none';
+                document.getElementById('bellDot').style.display = count > 0 ? '' : 'none';
+            },
+
+            formatDate(timestamp) {
+                const diff = Date.now() - timestamp;
+                const minutes = Math.floor(diff / 60000);
+                const hours = Math.floor(diff / 3600000);
+                const days = Math.floor(diff / 86400000);
+
+                if (minutes < 1) return 'Just now';
+                if (minutes < 60) return `${minutes}m ago`;
+                if (hours < 24) return `${hours}h ago`;
+                return `${days}d ago`;
+            }
+        };
+
+        // ============================================
+        // INITIALIZE
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            ToastManager.init();
+            ModalManager.init();
+            AlertsPage.init();
+
+            document.getElementById('searchCount').textContent = NEWS_DATA.length;
+            console.log('🚀 Alerts page loaded successfully!');
+        });
+    </script>
+</body>
+</html>
