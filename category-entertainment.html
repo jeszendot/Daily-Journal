@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entertainment News - NewsFlow</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* ===== GLOBAL STYLES ===== */
+        :root {
+            --primary-50: #EFF5FC; --primary-100: #DCE9F7; --primary-200: #B7D2EF;
+            --primary-300: #86B2E2; --primary-400: #5590D2; --primary-500: #2F6FBB;
+            --primary-600: #1E5399; --primary-700: #163E78; --primary-800: #102C58;
+            --primary-900: #0B1F3F;
+            --cat-color: #1E5399;
+            --cat-color-light: #EFF5FC;
+            --success: #0F8A6B; --success-bg: #DDF3EC;
+            --danger: #C0362C; --danger-bg: #FBE6E4;
+            --warning: #B5750F; --warning-bg: #FBF0DC;
+            --gray-50: #F6F8FB; --gray-100: #EEF2F7; --gray-200: #E0E6EE;
+            --gray-300: #C7D0DC; --gray-400: #93A1B4; --gray-500: #64748F;
+            --gray-600: #47536A; --gray-700: #303A4D; --gray-800: #1B2436;
+            --gray-900: #0D1420;
+            --shadow: 0 1px 3px 0 rgba(11, 31, 63, 0.08);
+            --shadow-md: 0 4px 10px -2px rgba(11, 31, 63, 0.12);
+            --shadow-lg: 0 12px 24px -6px rgba(11, 31, 63, 0.16);
+            --shadow-xl: 0 22px 40px -8px rgba(11, 31, 63, 0.20);
+            --radius: 10px; --radius-sm: 7px;
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--gray-50); color: var(--gray-800); min-height: 100vh; }
+        .app-container { display: flex; min-height: 100vh; }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 280px; background: white; border-right: 1px solid var(--gray-200);
+            border-top: 3px solid var(--primary-800); padding: 24px 16px;
+            position: fixed; top: 0; left: 0; bottom: 0; overflow-y: auto;
+            z-index: 100; transition: var(--transition); display: flex; flex-direction: column;
+        }
+        .sidebar-brand { display: flex; align-items: center; gap: 12px; padding: 0 12px 24px 12px; border-bottom: 1px solid var(--gray-200); margin-bottom: 24px; }
+        .sidebar-brand .logo { width: 42px; height: 42px; background: linear-gradient(135deg, var(--primary-700), var(--primary-900)); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; box-shadow: 0 4px 12px rgba(11, 31, 63, 0.35); }
+        .sidebar-brand .brand-text h1 { font-size: 18px; font-weight: 700; color: var(--primary-900); letter-spacing: 0.2px; }
+        .sidebar-brand .brand-text span { color: var(--gray-500); font-size: 11px; display: block; margin-top: -2px; text-transform: uppercase; letter-spacing: 0.6px; }
+        .sidebar-nav { display: flex; flex-direction: column; gap: 2px; flex: 1; }
+        .sidebar-nav .nav-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--gray-400); padding: 16px 12px 8px 12px; }
+        .sidebar-nav a {
+            display: flex; align-items: center; gap: 12px; padding: 10px 12px;
+            border-radius: var(--radius-sm); color: var(--gray-600); text-decoration: none;
+            transition: var(--transition); font-size: 14px; font-weight: 500; cursor: pointer; position: relative;
+        }
+        .sidebar-nav a:hover { background: var(--primary-50); color: var(--primary-700); }
+        .sidebar-nav a.active { background: var(--primary-50); color: var(--primary-700); }
+        .sidebar-nav a.active::before { content: ''; position: absolute; left: 0; top: 8px; bottom: 8px; width: 3px; background: var(--primary-600); border-radius: 0 4px 4px 0; }
+        .sidebar-nav a i { width: 20px; text-align: center; font-size: 16px; color: var(--gray-400); transition: var(--transition); }
+        .sidebar-nav a:hover i, .sidebar-nav a.active i { color: var(--primary-600); }
+        .sidebar-nav a .badge { margin-left: auto; background: var(--danger); color: white; font-size: 11px; font-weight: 600; padding: 2px 10px; border-radius: 20px; line-height: 1.6; }
+        .sidebar-nav a .badge.success { background: var(--success); }
+        .sidebar-footer { padding-top: 24px; border-top: 1px solid var(--gray-200); display: flex; flex-direction: column; gap: 4px; }
+        .sidebar-footer a { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: var(--radius-sm); color: var(--gray-500); text-decoration: none; transition: var(--transition); font-size: 14px; cursor: pointer; }
+        .sidebar-footer a:hover { background: var(--gray-50); color: var(--gray-700); }
+        .sidebar-footer a i { width: 20px; text-align: center; }
+
+        .main-content { margin-left: 280px; flex: 1; padding: 24px 32px 32px 32px; }
+
+        /* ===== TOP BAR ===== */
+        .topbar { display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; border-bottom: 1px solid var(--gray-200); margin-bottom: 32px; flex-wrap: wrap; gap: 16px; }
+        .topbar-left { display: flex; align-items: center; gap: 16px; }
+        .topbar-left h2 { font-size: 24px; font-weight: 700; color: var(--gray-900); }
+        .topbar-left .breadcrumb { display: flex; align-items: center; gap: 8px; color: var(--gray-500); font-size: 13px; }
+        .topbar-left .breadcrumb a { color: var(--primary-600); text-decoration: none; cursor: pointer; }
+        .topbar-left .breadcrumb a:hover { text-decoration: underline; }
+        .topbar-right { display: flex; align-items: center; gap: 12px; }
+        .topbar-right .search-btn { padding: 8px 16px; background: white; border: 1px solid var(--gray-200); border-radius: 20px; display: flex; align-items: center; gap: 8px; color: var(--gray-500); font-size: 13px; cursor: pointer; transition: var(--transition); }
+        .topbar-right .search-btn:hover { border-color: var(--primary-400); background: var(--primary-50); }
+        .topbar-right .notification-bell { position: relative; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: white; border-radius: 50%; border: 1px solid var(--gray-200); color: var(--gray-600); cursor: pointer; transition: var(--transition); }
+        .topbar-right .notification-bell:hover { background: var(--primary-50); border-color: var(--primary-300); color: var(--primary-600); }
+        .topbar-right .notification-bell .dot { position: absolute; top: 8px; right: 8px; width: 8px; height: 8px; background: var(--danger); border-radius: 50%; border: 2px solid white; animation: pulse-dot 2s infinite; }
+        @keyframes pulse-dot { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.3); } }
+        .topbar-right .user-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--primary-600), var(--primary-900)); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 16px; cursor: pointer; transition: var(--transition); border: 2px solid transparent; }
+        .topbar-right .user-avatar:hover { border-color: var(--primary-300); transform: scale(1.05); }
+        .menu-toggle { display: none; width: 40px; height: 40px; background: white; border: 1px solid var(--gray-200); border-radius: var(--radius-sm); align-items: center; justify-content: center; font-size: 18px; color: var(--gray-600); cursor: pointer; transition: var(--transition); }
+        .menu-toggle:hover { background: var(--gray-50); }
+        .mobile-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.5); z-index: 90; }
+        .mobile-overlay.active { display: block; }
+
+        /* ===== CATEGORY HERO ===== */
+        .category-hero {
+            background: linear-gradient(135deg, var(--primary-900), var(--cat-color));
+            padding: 32px 40px;
+            border-radius: var(--radius);
+            margin-bottom: 32px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        .category-hero::after {
+            content: '';
+            position: absolute;
+            right: -60px;
+            top: -60px;
+            width: 250px;
+            height: 250px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+        }
+        .category-hero .hero-content { position: relative; z-index: 1; }
+        .category-hero .category-icon { font-size: 42px; display: block; margin-bottom: 8px; }
+        .category-hero h1 { font-size: 28px; font-weight: 700; }
+        .category-hero p { color: rgba(255,255,255,0.75); font-size: 15px; margin-top: 4px; }
+        .category-hero .hero-tags { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; position: relative; z-index: 1; }
+        .category-hero .hero-tags span { padding: 4px 14px; background: rgba(255,255,255,0.12); border-radius: 20px; font-size: 12px; color: rgba(255,255,255,0.7); }
+
+        /* ===== ARTICLES ===== */
+        .category-articles {
+            background: white;
+            border-radius: var(--radius);
+            border: 1px solid var(--gray-200);
+            overflow: hidden;
+            min-height: 300px;
+        }
+        .category-articles .articles-header {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .category-articles .articles-header h3 { font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .category-articles .articles-header h3 i { color: var(--cat-color); }
+        .category-articles .articles-header span { color: var(--gray-500); font-size: 14px; }
+
+        .article-list .article-item {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--gray-100);
+            transition: var(--transition);
+            cursor: default;
+        }
+        .article-list .article-item:hover { background: var(--cat-color-light); }
+        .article-list .article-item:last-child { border-bottom: none; }
+        .article-list .article-item .article-title { font-weight: 600; color: var(--gray-900); font-size: 15px; }
+        .article-list .article-item .article-meta { display: flex; gap: 16px; font-size: 13px; color: var(--gray-500); margin-top: 4px; flex-wrap: wrap; align-items: center; }
+        .article-list .article-item .article-meta .source { font-weight: 600; }
+        .article-list .article-item .article-summary { font-size: 14px; color: var(--gray-600); margin-top: 6px; line-height: 1.6; }
+        .article-list .article-item .article-actions {
+            display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;
+        }
+        .article-list .article-item .article-actions .btn-read {
+            padding: 6px 18px;
+            background: var(--cat-color);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .article-list .article-item .article-actions .btn-read:hover {
+            background: var(--primary-700);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+        .article-list .article-item .article-actions .btn-read i {
+            font-size: 12px;
+        }
+        .article-list .article-item .article-actions .btn-detail {
+            padding: 6px 18px;
+            background: transparent;
+            color: var(--gray-600);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .article-list .article-item .article-actions .btn-detail:hover {
+            background: var(--gray-50);
+            border-color: var(--gray-300);
+        }
+
+        /* ===== LOADING ===== */
+        .loading-container { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 20px; gap: 16px; }
+        .loading-spinner { width: 40px; height: 40px; border: 4px solid var(--gray-200); border-top-color: var(--cat-color); border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-text { color: var(--gray-500); font-size: 14px; }
+
+        /* ===== FULL ARTICLE MODAL (In-Page View) ===== */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 23, 42, 0.7);
+            z-index: 250;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.active { display: flex; }
+
+        .modal {
+            background: white;
+            border-radius: var(--radius);
+            padding: 0;
+            max-width: 900px;
+            width: 92%;
+            max-height: 92vh;
+            box-shadow: var(--shadow-xl);
+            animation: fadeInUp 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px) scale(0.97); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .modal .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--gray-200);
+            background: white;
+            flex-shrink: 0;
+        }
+        .modal .modal-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--gray-900);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .modal .modal-header h3 i {
+            color: var(--cat-color);
+        }
+        .modal .modal-header .modal-close {
+            width: 36px;
+            height: 36px;
+            border: none;
+            border-radius: 50%;
+            background: var(--gray-100);
+            color: var(--gray-600);
+            font-size: 18px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .modal .modal-header .modal-close:hover {
+            background: var(--gray-200);
+        }
+
+        .modal .modal-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px 28px;
+            background: var(--gray-50);
+        }
+
+        /* Article Viewer inside Modal */
+        .article-viewer {
+            background: white;
+            border-radius: var(--radius-sm);
+            padding: 28px 32px;
+            border: 1px solid var(--gray-200);
+            box-shadow: var(--shadow);
+        }
+        .article-viewer .viewer-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+        .article-viewer .viewer-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 14px;
+            color: var(--gray-500);
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+        .article-viewer .viewer-meta .viewer-source {
+            font-weight: 600;
+            color: var(--cat-color);
+        }
+        .article-viewer .viewer-content {
+            font-size: 15px;
+            line-height: 1.8;
+            color: var(--gray-700);
+        }
+        .article-viewer .viewer-content p {
+            margin-bottom: 12px;
+        }
+        .article-viewer .viewer-content .placeholder-text {
+            color: var(--gray-400);
+            font-style: italic;
+        }
+        .article-viewer .viewer-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid var(--gray-200);
+            flex-wrap: wrap;
+        }
+        .article-viewer .viewer-actions .btn-external {
+            padding: 8px 20px;
+            background: var(--cat-color);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .article-viewer .viewer-actions .btn-external:hover {
+            background: var(--primary-700);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+        .article-viewer .viewer-actions .btn-share {
+            padding: 8px 20px;
+            background: var(--gray-100);
+            color: var(--gray-600);
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .article-viewer .viewer-actions .btn-share:hover {
+            background: var(--gray-200);
+        }
+
+        /* ===== NOTIFICATION PANEL ===== */
+        .notification-panel { position: fixed; top: 0; right: -420px; width: 400px; height: 100%; background: white; box-shadow: var(--shadow-lg); z-index: 200; transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; }
+        .notification-panel.open { right: 0; }
+        .notification-panel .panel-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; border-bottom: 1px solid var(--gray-200); }
+        .notification-panel .panel-header h3 { font-size: 18px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+        .notification-panel .panel-header h3 .count { background: var(--primary-100); color: var(--primary-700); font-size: 13px; padding: 1px 10px; border-radius: 20px; }
+        .notification-panel .panel-header .close-btn { width: 36px; height: 36px; border: none; border-radius: 50%; background: var(--gray-100); color: var(--gray-600); font-size: 18px; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; }
+        .notification-panel .panel-header .close-btn:hover { background: var(--gray-200); }
+        .notification-panel .panel-body { flex: 1; overflow-y: auto; padding: 16px 24px; }
+        .notification-item { display: flex; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--gray-100); transition: var(--transition); cursor: pointer; }
+        .notification-item:hover { background: var(--gray-50); margin: 0 -12px; padding: 14px 12px; border-radius: var(--radius-sm); }
+        .notification-item .notif-icon { width: 40px; height: 40px; min-width: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+        .notification-item .notif-icon.breaking { background: var(--danger-bg); color: var(--danger); }
+        .notification-item .notif-icon.update { background: var(--primary-100); color: var(--primary-600); }
+        .notification-item .notif-content { flex: 1; }
+        .notification-item .notif-content .notif-title { font-weight: 600; font-size: 14px; color: var(--gray-800); }
+        .notification-item .notif-content .notif-body { font-size: 13px; color: var(--gray-500); margin-top: 2px; }
+        .notification-item .notif-content .notif-time { font-size: 12px; color: var(--gray-400); margin-top: 4px; }
+        .notification-item .notif-unread { width: 8px; height: 8px; min-width: 8px; background: var(--primary-500); border-radius: 50%; margin-top: 6px; }
+        .panel-footer { padding: 16px 24px; border-top: 1px solid var(--gray-200); display: flex; gap: 12px; }
+        .panel-footer button { flex: 1; padding: 10px; border: none; border-radius: var(--radius-sm); font-weight: 500; cursor: pointer; transition: var(--transition); font-size: 14px; }
+        .panel-footer .mark-all { background: var(--primary-50); color: var(--primary-600); }
+        .panel-footer .mark-all:hover { background: var(--primary-100); }
+        .panel-footer .view-all { background: var(--primary-600); color: white; }
+        .panel-footer .view-all:hover { background: var(--primary-700); }
+        .overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.4); z-index: 150; opacity: 0; visibility: hidden; transition: var(--transition); backdrop-filter: blur(4px); }
+        .overlay.active { opacity: 1; visibility: visible; }
+
+        /* ===== TOAST ===== */
+        .toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 300; display: flex; flex-direction: column; gap: 12px; max-width: 450px; width: 100%; }
+        .toast { padding: 16px 20px; background: var(--gray-900); color: white; border-radius: var(--radius-sm); box-shadow: var(--shadow-lg); display: flex; align-items: center; gap: 12px; animation: slideInRight 0.4s ease forwards; width: 100%; }
+        .toast.success { border-left: 4px solid var(--success); }
+        .toast.error { border-left: 4px solid var(--danger); }
+        .toast.warning { border-left: 4px solid var(--warning); }
+        .toast.info { border-left: 4px solid var(--primary-400); }
+        .toast .toast-icon { font-size: 20px; }
+        .toast.success .toast-icon { color: var(--success); }
+        .toast.error .toast-icon { color: var(--danger); }
+        .toast.warning .toast-icon { color: var(--warning); }
+        .toast.info .toast-icon { color: var(--primary-400); }
+        .toast .toast-content { flex: 1; }
+        .toast .toast-content .toast-title { font-weight: 600; font-size: 14px; }
+        .toast .toast-content .toast-message { font-size: 13px; opacity: 0.8; margin-top: 2px; }
+        .toast .toast-close { background: none; border: none; color: rgba(255,255,255,0.5); cursor: pointer; font-size: 16px; padding: 4px; transition: var(--transition); }
+        .toast .toast-close:hover { color: white; }
+        @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .toast.removing { animation: slideOutRight 0.3s ease forwards; }
+        @keyframes slideOutRight { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
+
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); width: 280px; }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; padding: 16px; }
+            .menu-toggle { display: flex !important; }
+            .topbar { flex-direction: column; align-items: stretch; gap: 12px; }
+            .topbar-right { justify-content: flex-end; }
+            .category-hero { padding: 24px 20px; }
+            .category-hero h1 { font-size: 22px; }
+            .notification-panel { width: 100%; right: -100%; }
+            .toast-container { bottom: 12px; right: 12px; left: 12px; max-width: 100%; }
+            .modal { max-width: 98%; max-height: 95vh; }
+            .modal .modal-body { padding: 16px; }
+            .article-viewer { padding: 16px; }
+            .article-viewer .viewer-title { font-size: 20px; }
+        }
+        @media (max-width: 480px) {
+            .topbar-left h2 { font-size: 20px; }
+            .category-hero .category-icon { font-size: 36px; }
+            .category-hero h1 { font-size: 18px; }
+            .category-hero .hero-tags span { font-size: 10px; }
+            .article-list .article-item .article-actions { flex-direction: column; }
+            .article-list .article-item .article-actions .btn-read,
+            .article-list .article-item .article-actions .btn-detail { justify-content: center; }
+            .article-viewer .viewer-actions { flex-direction: column; }
+            .article-viewer .viewer-actions .btn-external,
+            .article-viewer .viewer-actions .btn-share { justify-content: center; }
+        }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: var(--gray-100); }
+        ::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--gray-400); }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+                <div class="logo"><i class="fas fa-newspaper"></i></div>
+                <div class="brand-text">
+                    <h1>Daily Journal</h1>
+                    <span>News Alert</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-label">Main</div>
+                <a href="dashboard.html"><i class="fas fa-th-large"></i> Dashboard</a>
+                <a href="search-news.html"><i class="fas fa-search"></i> Search News <span class="badge success">12</span></a>
+                <a href="alerts.html"><i class="fas fa-bell"></i> Alerts <span class="badge">8</span></a>
+
+                <div class="nav-label">Categories</div>
+                <a href="category-technology.html"><i class="fas fa-microchip"></i> Technology</a>
+                <a href="category-business.html"><i class="fas fa-chart-line"></i> Business</a>
+                <a href="category-sports.html"><i class="fas fa-futbol"></i> Sports</a>
+                <a href="category-entertainment.html" class="active"><i class="fas fa-film"></i> Entertainment</a>
+                <a href="category-health.html"><i class="fas fa-heartbeat"></i> Health</a>
+
+                <div class="nav-label">Settings</div>
+                <a href="preferences.html"><i class="fas fa-sliders-h"></i> Preferences</a>
+                <a href="sources.html"><i class="fas fa-rss"></i> News Sources</a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="help.html"><i class="fas fa-question-circle"></i> Help & Support</a>
+                <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </aside>
+
+        <div class="mobile-overlay" id="mobileOverlay"></div>
+
+        <main class="main-content">
+
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
+                    <div>
+                        <h2>Entertainment News</h2>
+                        <div class="breadcrumb"><a href="dashboard.html">Home</a><span>/</span><span>Entertainment</span></div>
+                    </div>
+                </div>
+                <div class="topbar-right">
+                    <button class="search-btn" id="quickSearchBtn"><i class="fas fa-search"></i> Quick Search <span style="font-size: 11px; opacity: 0.6;">(Ctrl+K)</span></button>
+                    <div class="notification-bell" id="bellIcon"><i class="fas fa-bell"></i><span class="dot" id="bellDot"></span></div>
+                    <div class="user-avatar" id="userAvatar">JD</div>
+                </div>
+            </header>
+
+            <!-- CATEGORY HERO -->
+            <div class="category-hero">
+                <div class="hero-content">
+                    <span class="category-icon"><i class="fas fa-film"></i></span>
+                    <h1>Entertainment News</h1>
+                    <p>Movie premieres, celebrity updates, music releases, and pop culture stories</p>
+                    <div class="hero-tags">
+                        <span>#Movies</span>
+                        <span>#Music</span>
+                        <span>#Celebrities</span>
+                        <span>#TV</span>
+                        <span>#PopCulture</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="category-articles">
+                <div class="articles-header">
+                    <h3><i class="fas fa-film"></i> Entertainment Articles</h3>
+                    <span id="articlesCount">Loading articles...</span>
+                </div>
+                <div class="article-list" id="articleList">
+                    <div class="loading-container">
+                        <div class="loading-spinner"></div>
+                        <div class="loading-text">Fetching latest entertainment news...</div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- FULL ARTICLE MODAL (In-Page Viewer) -->
+    <div class="modal-overlay" id="articleModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-newspaper"></i> <span id="modalTitle">Article</span></h3>
+                <button class="modal-close" id="modalClose">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Article content will be rendered here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- NOTIFICATION PANEL -->
+    <div class="overlay" id="panelOverlay"></div>
+    <div class="notification-panel" id="notificationPanel">
+        <div class="panel-header">
+            <h3><i class="fas fa-bell" style="color:var(--primary-600);"></i> News Alerts <span class="count" id="panelNotifCount">8 new</span></h3>
+            <button class="close-btn" id="closePanel"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="panel-body" id="notificationPanelBody"></div>
+        <div class="panel-footer">
+            <button class="mark-all" id="markAllReadBtn"><i class="fas fa-check-double"></i> Mark all read</button>
+            <button class="view-all" id="viewAllNotifsBtn">View all alerts</button>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        // ============================================
+        // CONFIGURATION
+        // ============================================
+        const CATEGORY = 'entertainment';
+        const CATEGORY_DISPLAY = 'Entertainment';
+        const CATEGORY_ICON = 'fa-film';
+        const CATEGORY_TAGS = ['#Movies', '#Music', '#Celebrities', '#TV', '#PopCulture'];
+        const CATEGORY_COLOR = '#1E5399';
+        const CATEGORY_COLOR_LIGHT = '#EFF5FC';
+
+        const API_KEY = 'jakfb5a8yNIPMsDHGlb5FAeMqqkbAIGv5tOjtKjmrZVlho0i';
+        const API_URL = `https://api.currentsapi.services/v1/latest-news?category=${CATEGORY}&language=en&apiKey=${API_KEY}`;
+
+        // ============================================
+        // TOAST MANAGER
+        // ============================================
+        const ToastManager = {
+            container: null, idCounter: 0,
+            init() { this.container = document.getElementById('toastContainer'); },
+            show(options) {
+                const { title, message, type = 'info', duration = 4000 } = options;
+                const id = ++this.idCounter;
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                toast.dataset.id = id;
+                const iconMap = { success: 'fa-check-circle', error: 'fa-exclamation-circle', warning: 'fa-exclamation-triangle', info: 'fa-info-circle' };
+                toast.innerHTML = `<div class="toast-icon"><i class="fas ${iconMap[type] || iconMap.info}"></i></div>
+                    <div class="toast-content"><div class="toast-title">${title}</div><div class="toast-message">${message}</div></div>
+                    <button class="toast-close" data-id="${id}"><i class="fas fa-times"></i></button>`;
+                this.container.appendChild(toast);
+                const timeout = setTimeout(() => this.remove(id), duration);
+                toast.querySelector('.toast-close').addEventListener('click', () => { clearTimeout(timeout); this.remove(id); });
+                return id;
+            },
+            remove(id) {
+                const toast = this.container.querySelector(`[data-id="${id}"]`);
+                if (toast) { toast.classList.add('removing'); setTimeout(() => toast.remove(), 300); }
+            },
+            success(title, message, duration) { return this.show({ title, message, type: 'success', duration }); },
+            error(title, message, duration) { return this.show({ title, message, type: 'error', duration }); },
+            warning(title, message, duration) { return this.show({ title, message, type: 'warning', duration }); },
+            info(title, message, duration) { return this.show({ title, message, type: 'info', duration }); }
+        };
+
+        // ============================================
+        // ARTICLE VIEWER (In-Page Modal)
+        // ============================================
+        const ArticleViewer = {
+            modal: null,
+            titleEl: null,
+            bodyEl: null,
+            closeBtn: null,
+
+            init() {
+                this.modal = document.getElementById('articleModal');
+                this.titleEl = document.getElementById('modalTitle');
+                this.bodyEl = document.getElementById('modalBody');
+                this.closeBtn = document.getElementById('modalClose');
+
+                this.closeBtn.addEventListener('click', () => this.close());
+                this.modal.addEventListener('click', (e) => {
+                    if (e.target === this.modal) this.close();
+                });
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') this.close();
+                });
+            },
+
+            open(article) {
+                const hasValidUrl = article.url && article.url !== '#' && !article.url.includes('example.com');
+
+                // Generate full article content with placeholder for missing data
+                const fullContent = `
+                    <div class="article-viewer">
+                        <h2 class="viewer-title">${article.title || 'Untitled Article'}</h2>
+                        <div class="viewer-meta">
+                            <span class="viewer-source"><i class="fas fa-rss"></i> ${article.author || 'Unknown Source'}</span>
+                            <span><i class="far fa-clock"></i> ${article.published || 'Recently'}</span>
+                            <span style="padding: 2px 12px; border-radius: 20px; font-size: 12px; background: var(--cat-color-light); color: var(--cat-color);">${CATEGORY_DISPLAY}</span>
+                        </div>
+                        <div class="viewer-content">
+                            ${article.description ? `
+                                <p><strong>Summary:</strong></p>
+                                <p>${article.description}</p>
+                            ` : '<p class="placeholder-text">No description available for this article.</p>'}
+                            
+                            ${article.content ? `
+                                <hr style="margin: 16px 0; border-color: var(--gray-200);">
+                                <p><strong>Full Content:</strong></p>
+                                <p>${article.content}</p>
+                            ` : `
+                                <hr style="margin: 16px 0; border-color: var(--gray-200);">
+                                <p class="placeholder-text">Full content is not available through the API.</p>
+                            `}
+                        </div>
+                        <div class="viewer-actions">
+                            ${hasValidUrl ? `
+                                <a href="${article.url}" target="_blank" class="btn-external">
+                                    <i class="fas fa-external-link-alt"></i> View on Original Site
+                                </a>
+                            ` : `
+                                <button class="btn-external" disabled style="opacity:0.5; cursor:not-allowed;">
+                                    <i class="fas fa-external-link-alt"></i> Original Site Unavailable
+                                </button>
+                            `}
+                            <button class="btn-share" onclick="navigator.share ? navigator.share({title: '${article.title || 'Article'}', text: '${(article.description || '').substring(0, 100)}'}) : navigator.clipboard.writeText('${article.title || 'Article'} - ${article.url || window.location.href}').then(() => ToastManager.success('Copied', 'Link copied to clipboard!'))">
+                                <i class="fas fa-share-alt"></i> Share
+                            </button>
+                            <button class="btn-share" onclick="window.print()">
+                                <i class="fas fa-print"></i> Print
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                this.titleEl.textContent = article.title || 'Article';
+                this.bodyEl.innerHTML = fullContent;
+                this.modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            },
+
+            close() {
+                this.modal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        };
+
+        // ============================================
+        // CATEGORY PAGE CONTROLLER
+        // ============================================
+        const CategoryPage = {
+            articles: [],
+            isLoading: false,
+
+            init() {
+                ArticleViewer.init();
+                this.bindEvents();
+                this.fetchNews();
+                this.setupNotificationPanel();
+                console.log(`📂 ${CATEGORY_DISPLAY} category page initialized`);
+            },
+
+            bindEvents() {
+                document.getElementById('quickSearchBtn').addEventListener('click', () => {
+                    window.location.href = 'search-news.html';
+                });
+
+                document.getElementById('logoutBtn').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (confirm('Are you sure you want to logout?')) {
+                        ToastManager.success('Logged Out', 'See you next time!');
+                    }
+                });
+
+                document.getElementById('userAvatar').addEventListener('click', () => {
+                    ToastManager.info('Profile', 'Viewing user profile');
+                });
+
+                document.getElementById('bellIcon').addEventListener('click', () => {
+                    document.getElementById('notificationPanel').classList.toggle('open');
+                    document.getElementById('panelOverlay').classList.toggle('active');
+                });
+                document.getElementById('closePanel').addEventListener('click', () => {
+                    document.getElementById('notificationPanel').classList.remove('open');
+                    document.getElementById('panelOverlay').classList.remove('active');
+                });
+                document.getElementById('panelOverlay').addEventListener('click', () => {
+                    document.getElementById('notificationPanel').classList.remove('open');
+                    document.getElementById('panelOverlay').classList.remove('active');
+                });
+                document.getElementById('markAllReadBtn').addEventListener('click', () => {
+                    ToastManager.success('All Read', 'All alerts marked as read');
+                });
+                document.getElementById('viewAllNotifsBtn').addEventListener('click', () => {
+                    window.location.href = 'alerts.html';
+                });
+
+                document.getElementById('menuToggle').addEventListener('click', () => {
+                    document.getElementById('sidebar').classList.toggle('open');
+                    document.getElementById('mobileOverlay').classList.toggle('active');
+                });
+                document.getElementById('mobileOverlay').addEventListener('click', () => {
+                    document.getElementById('sidebar').classList.remove('open');
+                    document.getElementById('mobileOverlay').classList.remove('active');
+                });
+                window.addEventListener('resize', () => {
+                    if (window.innerWidth > 768) {
+                        document.getElementById('sidebar').classList.remove('open');
+                        document.getElementById('mobileOverlay').classList.remove('active');
+                    }
+                });
+
+                document.addEventListener('keydown', (e) => {
+                    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                        e.preventDefault();
+                        window.location.href = 'search-news.html';
+                    }
+                });
+            },
+
+            async fetchNews() {
+                this.isLoading = true;
+                const container = document.getElementById('articleList');
+                container.innerHTML = `
+                    <div class="loading-container">
+                        <div class="loading-spinner"></div>
+                        <div class="loading-text">Fetching latest ${CATEGORY_DISPLAY} news...</div>
+                    </div>
+                `;
+
+                try {
+                    const response = await fetch(API_URL);
+                    const data = await response.json();
+
+                    if (data.status === 'ok' && data.news && data.news.length > 0) {
+                        this.articles = data.news;
+                        this.renderArticles();
+                        ToastManager.success('Loaded', `${data.news.length} ${CATEGORY_DISPLAY} articles loaded`);
+                    } else {
+                        this.useSampleData();
+                        ToastManager.warning('API Limited', 'Using sample data. API may have rate limits.');
+                    }
+                } catch (error) {
+                    console.error('API Error:', error);
+                    this.useSampleData();
+                    ToastManager.error('API Error', 'Failed to fetch news. Using sample data.');
+                }
+
+                this.isLoading = false;
+            },
+
+            useSampleData() {
+                this.articles = [
+                    { 
+                        title: 'Hollywood Strike Ends with Historic Deal', 
+                        description: 'Writers Guild reached a tentative agreement with studios after 148 days of striking. The deal includes improved compensation and AI protections.', 
+                        content: 'The Writers Guild of America (WGA) and the Alliance of Motion Picture and Television Producers (AMPTP) announced a tentative agreement late Tuesday night. The deal includes significant gains in compensation, residuals, and protections against the use of artificial intelligence in writing. The agreement will now be presented to the WGA membership for ratification. Industry insiders expect production to resume within weeks.',
+                        author: 'Lisa Park', 
+                        published: '2 hours ago', 
+                        url: '#'
+                    },
+                    { 
+                        title: 'New Marvel Movie Breaks Box Office Records', 
+                        description: 'The latest superhero film earned $350 million worldwide in its opening weekend, the highest debut of the year.', 
+                        content: 'The film shattered expectations with a $150 million domestic debut and $200 million internationally. Critics praised the film\'s visual effects and performances, with a 94% rating on Rotten Tomatoes. The studio has already greenlit a sequel, scheduled for release in 2026. The film also set a new record for IMAX screenings, generating $45 million from premium formats.',
+                        author: 'Alex Rivera', 
+                        published: '1 day ago', 
+                        url: '#'
+                    },
+                    { 
+                        title: 'Grammy Awards 2025: Full Winners List', 
+                        description: 'The 67th Annual Grammy Awards celebrated the best in music, with several artists winning multiple awards.', 
+                        content: 'The biggest winners of the night included Taylor Swift with Album of the Year for "Midnights", and Billie Eilish with Song of the Year for "What Was I Made For?". Newcomer Olivia Rodrigo won Best New Artist and Best Pop Vocal Album. The ceremony featured performances from over 20 artists and was watched by 18 million viewers, a 12% increase from last year.',
+                        author: 'Emma Wilson', 
+                        published: '2 days ago', 
+                        url: '#'
+                    },
+                    { 
+                        title: 'Netflix Announces New Streaming Strategy', 
+                        description: 'The streaming giant is introducing a new ad-supported tier and expanding its content library with exclusive deals.', 
+                        content: 'Netflix unveiled a new strategy focused on increasing subscriber growth and profitability. The company announced a lower-priced ad-supported tier coming to the US and UK markets, along with expanded content licensing deals with major studios. CFO John Smith said the company expects to add 20 million new subscribers by the end of the year. The stock jumped 15% following the announcement.',
+                        author: 'Sarah Chen', 
+                        published: '3 days ago', 
+                        url: '#'
+                    }
+                ];
+                this.renderArticles();
+            },
+
+            renderArticles() {
+                const container = document.getElementById('articleList');
+
+                if (this.articles.length === 0) {
+                    container.innerHTML = `
+                        <div style="padding: 40px; text-align: center; color: var(--gray-400);">
+                            <i class="fas fa-newspaper" style="font-size: 32px; display: block; margin-bottom: 12px;"></i>
+                            No articles found in this category
+                        </div>
+                    `;
+                    document.getElementById('articlesCount').textContent = 'Showing 0 articles';
+                    return;
+                }
+
+                container.innerHTML = this.articles.map((article, index) => {
+                    return `
+                    <div class="article-item" data-index="${index}">
+                        <div class="article-title">${article.title || 'Untitled Article'}</div>
+                        <div class="article-meta">
+                            <span class="source" style="color: var(--cat-color);">${article.author || 'Unknown Source'}</span>
+                            <span>•</span>
+                            <span><i class="far fa-clock"></i> ${article.published || 'Recently'}</span>
+                            <span>•</span>
+                            <span style="padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; background: var(--cat-color-light); color: var(--cat-color);">${CATEGORY_DISPLAY}</span>
+                            ${index < 2 ? '<span style="padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; background: var(--danger-bg); color: var(--danger);">🔴 NEW</span>' : ''}
+                        </div>
+                        <div class="article-summary">${article.description || 'No description available.'}</div>
+                        <div class="article-actions">
+                            <button class="btn-read" data-index="${index}">
+                                <i class="fas fa-book-open"></i> Read Full Article
+                            </button>
+                            <button class="btn-detail" data-index="${index}">
+                                <i class="fas fa-info-circle"></i> Quick View
+                            </button>
+                        </div>
+                    </div>
+                `}).join('');
+
+                // Bind Read Full Article buttons
+                container.querySelectorAll('.btn-read').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const index = parseInt(btn.dataset.index);
+                        const article = this.articles[index];
+                        if (article) ArticleViewer.open(article);
+                    });
+                });
+
+                // Bind Quick View buttons
+                container.querySelectorAll('.btn-detail').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const index = parseInt(btn.dataset.index);
+                        const article = this.articles[index];
+                        if (article) {
+                            ToastManager.info(
+                                article.title || 'Article',
+                                `By ${article.author || 'Unknown'} • ${article.published || 'Recently'}`
+                            );
+                        }
+                    });
+                });
+
+                document.getElementById('articlesCount').textContent = `Showing ${this.articles.length} articles`;
+                document.getElementById('searchCount').textContent = this.articles.length;
+            },
+
+            setupNotificationPanel() {
+                const body = document.getElementById('notificationPanelBody');
+                const alerts = this.articles.slice(0, 5);
+
+                if (alerts.length === 0) {
+                    body.innerHTML = `<div style="text-align: center; padding: 40px 0; color: var(--gray-400);"><i class="fas fa-bell-slash" style="font-size: 32px; display: block; margin-bottom: 12px;"></i>No new alerts</div>`;
+                    return;
+                }
+
+                body.innerHTML = alerts.map(alert => `
+                    <div class="notification-item">
+                        <div class="notif-icon ${alert.title && (alert.title.toLowerCase().includes('break') || alert.title.toLowerCase().includes('record')) ? 'breaking' : 'update'}">
+                            <i class="fas ${alert.title && (alert.title.toLowerCase().includes('break') || alert.title.toLowerCase().includes('record')) ? 'fa-bolt' : 'fa-newspaper'}"></i>
+                        </div>
+                        <div class="notif-content">
+                            <div class="notif-title">${alert.title || 'New article'}</div>
+                            <div class="notif-body">${(alert.description || '').substring(0, 80)}...</div>
+                            <div class="notif-time">${alert.published || 'Just now'}</div>
+                        </div>
+                        <div class="notif-unread"></div>
+                    </div>
+                `).join('');
+
+                const count = alerts.length;
+                document.getElementById('panelNotifCount').textContent = count + ' new';
+                document.getElementById('notifBadge').textContent = count;
+                document.getElementById('notifBadge').style.display = count > 0 ? '' : 'none';
+                document.getElementById('bellDot').style.display = count > 0 ? '' : 'none';
+            }
+        };
+
+        // ============================================
+        // INITIALIZE
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            ToastManager.init();
+            CategoryPage.init();
+            console.log(`📂 ${CATEGORY_DISPLAY} page loaded successfully!`);
+        });
+    </script>
+</body>
+</html>
