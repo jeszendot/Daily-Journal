@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Journal Search & Notification Hub</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/landing.css">
+</head>
+<body class="landing">
+
+    <!-- ============================================
+    NAV
+    ============================================ -->
+    <nav class="landing-nav">
+        <div class="nav-inner">
+            <div class="nav-brand">
+                <div class="logo"><i class="fas fa-newspaper"></i></div>
+                <span>NewsFlow</span>
+            </div>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#how-it-works">How it works</a>
+                <a href="#sources">Sources</a>
+            </div>
+            <div class="nav-cta">
+                <a href="dashboard.html" class="btn btn-primary">Open Dashboard <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ============================================
+    HERO
+    ============================================ -->
+    <header class="hero">
+        <div class="container">
+            <div class="hero-grid">
+                <div class="hero-copy">
+                    <span class="hero-eyebrow"><i class="fas fa-bolt"></i> Real-time news intelligence</span>
+                    <h1>Every story that matters, <em>tracked and delivered</em> the moment it breaks.</h1>
+                    <p class="hero-sub">
+                        NewsFlow searches thousands of articles across the sources you trust, then alerts your
+                        team the instant a topic, keyword, or breaking story appears — all from one organized dashboard.
+                    </p>
+                    <div class="hero-actions">
+                        <a href="dashboard.html" class="btn btn-primary btn-lg">Open Dashboard <i class="fas fa-arrow-right"></i></a>
+                        <a href="#features" class="btn btn-outline btn-lg">See how it works</a>
+                    </div>
+                    <div class="hero-trust">
+                        <span class="trust-item"><i class="fas fa-check-circle"></i> No credit card required</span>
+                        <span class="trust-item"><i class="fas fa-check-circle"></i> 27 active sources</span>
+                        <span class="trust-item"><i class="fas fa-check-circle"></i> Alerts in under 60s</span>
+                    </div>
+                </div>
+
+                <div class="hero-visual">
+                    <div class="mock-window">
+                        <div class="mock-titlebar">
+                            <span></span><span></span><span></span>
+                        </div>
+                        <div class="mock-body">
+                            <div class="mock-stat-row">
+                                <div class="mock-stat">
+                                    <div class="mock-icon a"><i class="fas fa-newspaper"></i></div>
+                                    <div class="mock-num">12,847</div>
+                                    <div class="mock-label">Articles</div>
+                                </div>
+                                <div class="mock-stat">
+                                    <div class="mock-icon b"><i class="fas fa-bell"></i></div>
+                                    <div class="mock-num">8,432</div>
+                                    <div class="mock-label">Alerts sent</div>
+                                </div>
+                                <div class="mock-stat">
+                                    <div class="mock-icon c"><i class="fas fa-rss"></i></div>
+                                    <div class="mock-num">27</div>
+                                    <div class="mock-label">Sources</div>
+                                </div>
+                            </div>
+                            <div class="mock-list">
+                                <div class="mock-row"><span class="dot"></span><span class="bar med"></span></div>
+                                <div class="mock-row"><span class="dot"></span><span class="bar short"></span></div>
+                                <div class="mock-row"><span class="dot"></span><span class="bar med"></span></div>
+                                <div class="mock-row"><span class="dot"></span><span class="bar short"></span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="floating-badge fb-1"><i class="fas fa-circle-check"></i> Alert delivered</div>
+                    <div class="floating-badge fb-2"><i class="fas fa-arrow-trend-up"></i> +12.5% this week</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ============================================
+    SOURCES STRIP
+    ============================================ -->
+    <section class="sources-strip" id="sources">
+        <div class="container strip-inner">
+            <span class="strip-label">Tracking articles from</span>
+            <div class="strip-logos">
+                <span>CNN</span>
+                <span>BBC</span>
+                <span>Reuters</span>
+                <span>Associated Press</span>
+                <span>NY Times</span>
+                <span>The Guardian</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+    FEATURES
+    ============================================ -->
+    <section class="section" id="features">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-eyebrow">Why NewsFlow</div>
+                <h2>One dashboard for search, alerts, and sources</h2>
+                <p>Everything you need to monitor the news that matters to your organization, organized into a single, focused workspace.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon blue"><i class="fas fa-search"></i></div>
+                    <h3>Powerful search</h3>
+                    <p>Filter thousands of articles by category, source, and date to find exactly what you're looking for in seconds.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon cyan"><i class="fas fa-bell"></i></div>
+                    <h3>Smart alerts</h3>
+                    <p>Create keyword-based alerts and get notified the moment a matching story is published anywhere in your sources.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon indigo"><i class="fas fa-th-large"></i></div>
+                    <h3>Organized categories</h3>
+                    <p>Technology, business, sports, entertainment, and health — sorted automatically so nothing gets lost.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon navy"><i class="fas fa-rss"></i></div>
+                    <h3>Trusted sources</h3>
+                    <p>Pull coverage from 27 major outlets including CNN, BBC, Reuters, and the Associated Press.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon blue"><i class="fas fa-download"></i></div>
+                    <h3>Export anytime</h3>
+                    <p>Download filtered results for reports, research, or sharing with your team in one click.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon cyan"><i class="fas fa-sliders-h"></i></div>
+                    <h3>Built-in preferences</h3>
+                    <p>Tune sources, categories, and notification settings so the dashboard fits how your team works.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+    STATS BAND
+    ============================================ -->
+    <section class="stats-band">
+        <div class="container">
+            <div class="stats-band-grid">
+                <div>
+                    <div class="stat-num">12,847</div>
+                    <div class="stat-caption">Articles indexed</div>
+                </div>
+                <div>
+                    <div class="stat-num">8,432</div>
+                    <div class="stat-caption">Alerts delivered</div>
+                </div>
+                <div>
+                    <div class="stat-num">143</div>
+                    <div class="stat-caption">Breaking stories caught</div>
+                </div>
+                <div>
+                    <div class="stat-num">27</div>
+                    <div class="stat-caption">Active sources</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+    HOW IT WORKS
+    ============================================ -->
+    <section class="section" id="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-eyebrow">How it works</div>
+                <h2>Set up in minutes, stay informed for good</h2>
+                <p>NewsFlow does the monitoring so your team can focus on what the news means, not on finding it.</p>
+            </div>
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-num">1</div>
+                    <h3>Pick your sources & categories</h3>
+                    <p>Choose the outlets and topics your team cares about, from technology to global business.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-num">2</div>
+                    <h3>Create keyword alerts</h3>
+                    <p>Set up alerts for the people, companies, or topics you need to track continuously.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-num">3</div>
+                    <h3>Get notified instantly</h3>
+                    <p>Receive alerts the moment a matching story goes live, right inside your dashboard.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+    CTA
+    ============================================ -->
+    <section class="section" style="padding-top: 0;">
+        <div class="container">
+            <div class="cta-banner">
+                <h2>Ready to take control of your news feed?</h2>
+                <p>Open the dashboard and start tracking the stories that matter to your team today.</p>
+                <div class="cta-actions">
+                    <a href="dashboard.html" class="btn btn-primary btn-lg">Open Dashboard <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+    FOOTER
+    ============================================ -->
+    <footer class="landing-footer">
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <div class="logo"><i class="fas fa-newspaper"></i></div>
+                    NewsFlow
+                </div>
+                <div class="footer-links">
+                    <div class="footer-col">
+                        <h4>Product</h4>
+                        <a href="dashboard.html">Dashboard</a>
+                        <a href="#features">Features</a>
+                        <a href="#sources">Sources</a>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Company</h4>
+                        <a href="#">About</a>
+                        <a href="#">Help & Support</a>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Legal</h4>
+                        <a href="#">Privacy</a>
+                        <a href="#">Terms</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>© 2026 NewsFlow. All rights reserved.</span>
+                <span>v2.0 · News Alert Hub</span>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
