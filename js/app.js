@@ -1,5 +1,5 @@
 // ============================================
-/// MAIN APPLICATION - UPDATED FOR REAL-TIME
+// MAIN APPLICATION - UPDATED FOR REAL-TIME
 // ============================================
 
 const App = {
