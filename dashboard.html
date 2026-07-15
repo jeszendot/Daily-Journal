@@ -11,7 +11,7 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- CSS Files - MAKE SURE THESE PATHS ARE CORRECT -->
+    <!-- CSS Files -->
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="components.css">
     
@@ -34,46 +34,49 @@
 
             <nav class="sidebar-nav">
                 <div class="nav-label">Main</div>
-                <a href="#" class="active" data-page="dashboard">
+                <!-- Dashboard - Active -->
+                <a href="dashboard.html" class="active" data-page="dashboard">
                     <i class="fas fa-th-large"></i> Dashboard
                 </a>
-                <a href="#" data-page="search">
+                <!-- Search News - Link to search-news.html -->
+                <a href="search-news.html" data-page="search">
                     <i class="fas fa-search"></i> Search News
                     <span class="badge success" id="searchCount">12</span>
                 </a>
-                <a href="#" data-page="notifications">
+                <!-- Alerts -->
+                <a href="alerts.html" data-page="notifications">
                     <i class="fas fa-bell"></i> Alerts
                     <span class="badge" id="notifBadge">8</span>
                 </a>
 
                 <div class="nav-label">Categories</div>
-                <a href="#" data-page="technology">
+                <a href="category-technology.html" data-page="technology">
                     <i class="fas fa-microchip"></i> Technology
                 </a>
-                <a href="#" data-page="business">
+                <a href="category-business.html" data-page="business">
                     <i class="fas fa-chart-line"></i> Business
                 </a>
-                <a href="#" data-page="sports">
+                <a href="category-sports.html" data-page="sports">
                     <i class="fas fa-futbol"></i> Sports
                 </a>
-                <a href="#" data-page="entertainment">
+                <a href="category-entertainment.html" data-page="entertainment">
                     <i class="fas fa-film"></i> Entertainment
                 </a>
-                <a href="#" data-page="health">
+                <a href="category-health.html" data-page="health">
                     <i class="fas fa-heartbeat"></i> Health
                 </a>
 
                 <div class="nav-label">Settings</div>
-                <a href="#" data-page="preferences">
+                <a href="preferences.html" data-page="preferences">
                     <i class="fas fa-sliders-h"></i> Preferences
                 </a>
-                <a href="#" data-page="sources">
+                <a href="sources.html" data-page="sources">
                     <i class="fas fa-rss"></i> News Sources
                 </a>
             </nav>
 
             <div class="sidebar-footer">
-                <a href="#" data-page="help">
+                <a href="help.html" data-page="help">
                     <i class="fas fa-question-circle"></i> Help & Support
                 </a>
                 <a href="#" id="logoutBtn">
@@ -97,7 +100,7 @@
                     <div>
                         <h2 id="pageTitle">Dashboard</h2>
                         <div class="breadcrumb">
-                            <a href="#" data-page="dashboard">Home</a>
+                            <a href="dashboard.html">Home</a>
                             <span>/</span>
                             <span id="breadcrumbCurrent">Dashboard</span>
                         </div>
@@ -283,7 +286,7 @@
     </div>
 
     <!-- ============================================
-    JAVASCRIPT FILES - MAKE SURE THESE PATHS ARE CORRECT
+    JAVASCRIPT FILES
     ============================================ -->
     <script src="js/data.js"></script>
     <script src="js/toasts.js"></script>
@@ -330,6 +333,74 @@
                         </tr>
                     `;
                 }
+            }
+
+            // ============================================
+            // QUICK SEARCH BUTTON - Redirect to search-news.html
+            // ============================================
+            const quickSearchBtn = document.getElementById('quickSearchBtn');
+            if (quickSearchBtn) {
+                quickSearchBtn.addEventListener('click', function() {
+                    window.location.href = 'search-news.html';
+                });
+            }
+
+            // ============================================
+            // SEARCH INPUT - Redirect to search-news.html on Enter
+            // ============================================
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        const query = this.value.trim();
+                        if (query) {
+                            // Save search query to localStorage so search-news.html can use it
+                            localStorage.setItem('newsflow_search_query', query);
+                            window.location.href = 'search-news.html';
+                        }
+                    }
+                });
+            }
+
+            // ============================================
+            // APPLY FILTERS - Redirect to search-news.html with filters
+            // ============================================
+            const applyFiltersBtn = document.getElementById('applyFiltersBtn');
+            if (applyFiltersBtn) {
+                applyFiltersBtn.addEventListener('click', function() {
+                    const category = document.getElementById('filterCategory').value;
+                    const source = document.getElementById('filterSource').value;
+                    const date = document.getElementById('filterDate').value;
+                    
+                    // Save filters to localStorage
+                    localStorage.setItem('newsflow_filters', JSON.stringify({
+                        category: category,
+                        source: source,
+                        date: date
+                    }));
+                    
+                    window.location.href = 'search-news.html';
+                });
+            }
+
+            // ============================================
+            // VIEW ALL ALERTS - Redirect to alerts.html
+            // ============================================
+            const viewAllBtn = document.getElementById('viewAllNotifsBtn');
+            if (viewAllBtn) {
+                viewAllBtn.addEventListener('click', function() {
+                    window.location.href = 'alerts.html';
+                });
+            }
+
+            // ============================================
+            // CREATE ALERT - Redirect to alerts.html
+            // ============================================
+            const addAlertBtn = document.getElementById('addAlertBtn');
+            if (addAlertBtn) {
+                addAlertBtn.addEventListener('click', function() {
+                    window.location.href = 'alerts.html';
+                });
             }
         });
     </script>
