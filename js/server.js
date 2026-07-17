@@ -2,6 +2,11 @@
 // WEBSOCKET SERVER FOR REAL-TIME NEWS
 // ============================================
 
+const express = require("express");
+const app = express();
+
+app.use(express.json());
+
 const WebSocket = require('ws');
 const http = require('http');
 
@@ -189,9 +194,33 @@ setInterval(() => {
     }
 }, 10000);
 
+let news = [];
+
+app.post("/news", (req, res) => {
+    const article = {
+        id: Date.now(),
+        ...req.body
+    };
+
+    news.push(article);
+
+    res.status(201).json({
+        success: true,
+        message: "News added successfully",
+        data: article
+    });
+});
+
+app.get("/news", (req, res) => {
+    res.json(news);
+});
+
 // Start server
 const PORT = 8080;
-server.listen(PORT, () => {
-    console.log(`🚀 WebSocket server running on ws://localhost:${PORT}`);
-    console.log(`📊 Serving real-time news updates to ${clients.size} clients`);
+app.listen(3000, () => {
+    console.log("REST API running on http://localhost:3000");
+});
+
+server.listen(8080, () => {
+    console.log("WebSocket running on ws://localhost:8080");
 });
