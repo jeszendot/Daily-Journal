@@ -1032,7 +1032,7 @@
             const category = typeof a.category === 'string' ?
                 a.category.charAt(0).toUpperCase() + a.category.slice(1) :
                 'General';
-            const source = window.ExportManager ? ExportManager.formatSource(a.source, a) : (a.source?.name || a.author || 'General News');
+            const source = window.ExportManager ? ExportManager.formatSource(a.source, a) : (a.source?.name || 'News Outlet');
 
             const pubDate = new Date(a.published);
             const diff = Date.now() - pubDate.getTime();
@@ -1041,9 +1041,8 @@
             const days = Math.floor(hours / 24);
             let dateStr = days ? `${days}d ago` : hours ? `${hours}h ago` : minutes ? `${minutes}m ago` : 'Just now';
 
-            const statuses = ['Published', 'Published', 'Published', 'Featured'];
-            const status = statuses[Math.floor(Math.random() * statuses.length)];
-            const statusColor = status === 'Featured' ? 'warning' : 'success';
+            const status = window.ExportManager ? ExportManager.formatStatus(a) : (a.status || 'Published');
+            const statusColor = (status === 'Featured' || status === 'Breaking') ? 'warning' : 'success';
 
             html += `
                 <tr>
@@ -1196,8 +1195,7 @@
                 { label: 'Category', key: item => item.category || 'General' },
                 { label: 'Source', key: item => ExportManager.formatSource(item.source, item) },
                 { label: 'Published', key: item => item.published ? (new Date(item.published).toString() !== 'Invalid Date' ? new Date(item.published).toLocaleDateString() : item.published) : '' },
-                { label: 'Status', key: item => item.status || 'published' },
-                { label: 'Author', key: item => item.author || '' },
+                { label: 'Status', key: item => ExportManager.formatStatus(item) },
                 { label: 'URL', key: item => item.url || '' }
             ];
 

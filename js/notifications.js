@@ -430,8 +430,7 @@ const NewsManager = {
                 { label: 'Category', key: 'category' },
                 { label: 'Source', key: item => ExportManager.formatSource(item.source, item) },
                 { label: 'Published', key: 'published' },
-                { label: 'Status', key: 'status' },
-                { label: 'Author', key: 'author' }
+                { label: 'Status', key: item => ExportManager.formatStatus(item) }
             ];
 
             if (format === 'json') {

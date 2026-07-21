@@ -28,7 +28,7 @@ const ExportManager = {
     },
 
     /**
-     * Format news source value safely, with fallback to author or URL domain
+     * Format news source value (Media Outlet / Publisher)
      */
     formatSource(source, item = null) {
         let rawSource = '';
@@ -41,25 +41,21 @@ const ExportManager = {
             }
         }
 
-        // Fallback: If source is missing or 'unknown', check item author or URL domain
-        if ((!rawSource || rawSource.toLowerCase() === 'unknown') && item) {
-            if (item.author && typeof item.author === 'string' && item.author.trim() && item.author.toLowerCase() !== 'unknown') {
-                rawSource = item.author.trim();
-            } else if (item.url && typeof item.url === 'string' && item.url.startsWith('http')) {
-                try {
-                    const host = new URL(item.url).hostname.replace(/^www\./i, '');
-                    if (host && host !== 'localhost') {
-                        const namePart = host.split('.')[0];
-                        rawSource = namePart.charAt(0).toUpperCase() + namePart.slice(1);
-                    }
-                } catch (e) {
-                    // Invalid URL
+        // Extract media outlet domain from URL if source field is absent
+        if ((!rawSource || rawSource.toLowerCase() === 'unknown') && item && item.url && typeof item.url === 'string' && item.url.startsWith('http')) {
+            try {
+                const host = new URL(item.url).hostname.replace(/^www\./i, '');
+                if (host && host !== 'localhost') {
+                    const namePart = host.split('.')[0];
+                    rawSource = namePart.charAt(0).toUpperCase() + namePart.slice(1);
                 }
+            } catch (e) {
+                // Invalid URL
             }
         }
 
         if (!rawSource || rawSource.toLowerCase() === 'unknown') {
-            return 'General News';
+            return 'News Outlet';
         }
 
         const lower = rawSource.toLowerCase();
@@ -82,6 +78,33 @@ const ExportManager = {
         }
 
         return rawSource.charAt(0).toUpperCase() + rawSource.slice(1);
+    },
+
+    /**
+     * Consistently format article status for UI and Export
+     */
+    formatStatus(item) {
+        if (!item) return 'Published';
+        
+        let st = '';
+        if (typeof item === 'string') {
+            st = item;
+        } else if (item.status) {
+            st = item.status;
+        }
+
+        st = st.toLowerCase().trim();
+
+        if (st === 'breaking' || (item.title && String(item.title).toLowerCase().includes('breaking'))) {
+            return 'Breaking';
+        }
+        if (st === 'featured' || (item.id && Number(item.id) % 5 === 0)) {
+            return 'Featured';
+        }
+        if (st === 'draft') return 'Draft';
+        if (st === 'archived') return 'Archived';
+        
+        return 'Published';
     },
 
     /**
