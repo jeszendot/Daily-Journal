@@ -10,6 +10,7 @@
     
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="js/export.js"></script>
     
     <style>
         /* ============================================
@@ -1519,7 +1520,9 @@
                     Found <strong id="resultCount">0</strong> articles
                     <span style="color: var(--gray-400); margin-left: 8px;" id="searchTime"></span>
                 </div>
-                <div class="view-toggle">
+                <div class="view-toggle" style="display: flex; gap: 8px; align-items: center;">
+                    <button id="exportCsvBtn" title="Export results as CSV" style="padding: 6px 12px; font-weight: 500; font-size: 13px;"><i class="fas fa-file-csv"></i> Export CSV</button>
+                    <button id="exportJsonBtn" title="Export results as JSON" style="padding: 6px 12px; font-weight: 500; font-size: 13px;"><i class="fas fa-file-code"></i> Export JSON</button>
                     <button class="active" data-view="list"><i class="fas fa-list"></i> List</button>
                     <button data-view="grid"><i class="fas fa-th"></i> Grid</button>
                 </div>
@@ -2074,6 +2077,33 @@
                 console.log('🔍 Search page initialized with', this.filteredData.length, 'articles');
             },
 
+            exportData(format = 'csv') {
+                if (!this.filteredData || !this.filteredData.length) {
+                    ToastManager.warning('No Data', 'No articles available to export');
+                    return;
+                }
+
+                if (window.ExportManager) {
+                    const columns = [
+                        { label: 'Title', key: 'title' },
+                        { label: 'Category', key: 'category' },
+                        { label: 'Source', key: 'source' },
+                        { label: 'Published', key: 'published' },
+                        { label: 'Status', key: 'status' },
+                        { label: 'Author', key: 'author' },
+                        { label: 'Summary', key: 'summary' }
+                    ];
+
+                    if (format === 'json') {
+                        ExportManager.exportToJSON(this.filteredData, 'search_news_results');
+                    } else {
+                        ExportManager.exportToCSV(this.filteredData, 'search_news_results', columns);
+                    }
+                } else {
+                    ToastManager.error('Error', 'Export manager component missing');
+                }
+            },
+
             bindEvents() {
                 const searchInput = document.getElementById('searchInputLarge');
                 let debounceTimer;
@@ -2122,7 +2152,19 @@
 
                 document.querySelectorAll('.view-toggle button').forEach(btn => {
                     btn.addEventListener('click', () => {
-                        document.querySelectorAll('.view-toggle button').forEach(b => b.classList.remove('active'));
+                        if (btn.id === 'exportCsvBtn') {
+                            this.exportData('csv');
+                            return;
+                        }
+                        if (btn.id === 'exportJsonBtn') {
+                            this.exportData('json');
+                            return;
+                        }
+                        document.querySelectorAll('.view-toggle button').forEach(b => {
+                            if (b.id !== 'exportCsvBtn' && b.id !== 'exportJsonBtn') {
+                                b.classList.remove('active');
+                            }
+                        });
                         btn.classList.add('active');
                         this.currentView = btn.dataset.view;
                         this.renderResults();

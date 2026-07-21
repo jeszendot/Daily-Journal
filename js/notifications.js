@@ -418,31 +418,30 @@ const NewsManager = {
         }, 1500);
     },
 
-    exportData() {
-        // Same as before
-        const data = this.filteredData.map(n => ({
-            title: n.title,
-            category: n.category,
-            source: SOURCE_NAMES[n.source] || n.source,
-            published: n.published,
-            status: n.status,
-            author: n.author
-        }));
+    exportData(format = 'csv') {
+        if (!this.filteredData || !this.filteredData.length) {
+            ToastManager.warning('No Data', 'No articles available to export');
+            return;
+        }
 
-        const csv = [
-            ['Title', 'Category', 'Source', 'Published', 'Status', 'Author'],
-            ...data.map(row => [row.title, row.category, row.source, row.published, row.status, row.author])
-        ].map(row => row.join(',')).join('\n');
+        if (window.ExportManager) {
+            const columns = [
+                { label: 'Title', key: 'title' },
+                { label: 'Category', key: 'category' },
+                { label: 'Source', key: item => (typeof SOURCE_NAMES !== 'undefined' && SOURCE_NAMES[item.source]) ? SOURCE_NAMES[item.source] : item.source },
+                { label: 'Published', key: 'published' },
+                { label: 'Status', key: 'status' },
+                { label: 'Author', key: 'author' }
+            ];
 
-        const blob = new Blob([csv], { type: 'text/csv' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `news_articles_${new Date().toISOString().slice(0,10)}.csv`;
-        a.click();
-        URL.revokeObjectURL(url);
-
-        ToastManager.success('Exported', 'News data exported successfully');
+            if (format === 'json') {
+                ExportManager.exportToJSON(this.filteredData, 'news_notifications_export');
+            } else {
+                ExportManager.exportToCSV(this.filteredData, 'news_notifications_export', columns);
+            }
+        } else {
+            ToastManager.error('Error', 'Export manager component missing');
+        }
     }
 };
 

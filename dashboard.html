@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="js/export.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -763,7 +764,8 @@
             <div class="results-header">
                 <div class="results-info"><h3>Latest News Articles</h3><span id="resultsCount">Loading news...</span></div>
                 <div class="results-actions">
-                    <button id="exportBtn"><i class="fas fa-download"></i> Export</button>
+                    <button id="exportCsvBtn" title="Export current results as CSV"><i class="fas fa-file-csv"></i> Export CSV</button>
+                    <button id="exportJsonBtn" title="Export current results as JSON"><i class="fas fa-file-code"></i> Export JSON</button>
                     <button id="refreshBtn"><i class="fas fa-sync-alt"></i> Refresh</button>
                 </div>
             </div>
@@ -1168,30 +1170,33 @@
         });
     }
 
-    function exportData() {
-        if (!filteredData.length) {
+    function exportData(format = 'csv') {
+        if (!filteredData || !filteredData.length) {
             showToast('No data to export', 'warning');
             return;
         }
 
-        const headers = ['Title', 'Category', 'Source', 'Published', 'URL'];
-        const rows = filteredData.slice(0, 100).map(a => [
-            `"${(a.title || '').replace(/"/g, '""')}"`,
-            `"${(a.category || 'General').replace(/"/g, '""')}"`,
-            `"${(a.source?.name || 'Unknown').replace(/"/g, '""')}"`,
-            `"${new Date(a.published).toLocaleDateString()}"`,
-            `"${a.url || ''}"`
-        ]);
+        const dataToExport = filteredData.slice(0, 100);
+        
+        if (window.ExportManager) {
+            const columns = [
+                { label: 'Title', key: item => item.title || '' },
+                { label: 'Category', key: item => item.category || 'General' },
+                { label: 'Source', key: item => item.source?.name || item.source || 'Unknown' },
+                { label: 'Published', key: item => item.published ? (new Date(item.published).toString() !== 'Invalid Date' ? new Date(item.published).toLocaleDateString() : item.published) : '' },
+                { label: 'Status', key: item => item.status || 'published' },
+                { label: 'Author', key: item => item.author || '' },
+                { label: 'URL', key: item => item.url || '' }
+            ];
 
-        const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
-        const blob = new Blob([csv], { type: 'text/csv' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `news_export_${new Date().toISOString().split('T')[0]}.csv`;
-        a.click();
-        URL.revokeObjectURL(url);
-        showToast('Data exported successfully!', 'success');
+            if (format === 'json') {
+                ExportManager.exportToJSON(dataToExport, 'news_dashboard_export');
+            } else {
+                ExportManager.exportToCSV(dataToExport, 'news_dashboard_export', columns);
+            }
+        } else {
+            showToast('Export manager unavailable', 'error');
+        }
     }
 
     // ---- DOM READY ----
@@ -1241,7 +1246,9 @@
             showToast('Refreshing news...', 'info');
         });
 
-        document.getElementById('exportBtn').addEventListener('click', exportData);
+        document.getElementById('exportCsvBtn')?.addEventListener('click', () => exportData('csv'));
+        document.getElementById('exportJsonBtn')?.addEventListener('click', () => exportData('json'));
+        document.getElementById('exportBtn')?.addEventListener('click', () => exportData('csv'));
 
         document.getElementById('quickSearchBtn').addEventListener('click', function() {
             document.getElementById('searchInput').focus();
