@@ -1275,7 +1275,7 @@
 
         document.getElementById('logoutBtn').addEventListener('click', function(e) {
             e.preventDefault();
-            showToast('Logging out...', 'info');
+            window.location.href = 'index.html';
         });
         document.getElementById('bellIcon').addEventListener('click', function() {
             showToast('No new notifications', 'info');
