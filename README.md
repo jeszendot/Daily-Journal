@@ -14,18 +14,6 @@ Frontend-Layer
 Daily Journal is a news search and notification dashboard built with plain HTML, CSS, and JavaScript. The project has two pages: index.html, a marketing front page introducing the product, and dashboard.html, the actual working app where users search articles, apply filters, and manage alerts. All the pages share one blue color system defined in css/style.css, with css/components.css styling the dashboard's cards and tables and css/landing.css styling the front page. The dashboard's behavior — search, notifications, toasts, and modals — is split across js/data.js, js/search.js, js/notifications.js, js/modals.js, js/toasts.js, and js/app.js. It uses mock data only, so it runs entirely in the browser with no backend or setup required.
 
 
-**Features**
-
-
-Search & filters — filter articles by category, source, and date range
-Keyword alerts — create alerts that notify you when matching stories are published
-Notification panel — a running feed of alerts with unread counts and "mark all read"
-Category browsing — Technology, Business, Sports, Entertainment, Health, and more
-Sortable results table — with pagination and export
-Toasts & modals — confirmation, detail, and alert-creation dialogs
-Responsive layout — collapsible sidebar and adapted layouts down to mobile
-Keyboard shortcut — opens quick search
-
 **Contributors**
 Princess Iris A. Gayos, Alessandra Mae A. Perey, & MarkLee B. Olino
 main
