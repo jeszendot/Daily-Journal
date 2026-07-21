@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="js/export.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -496,19 +495,7 @@
         .source-name {
             font-size: 13px;
             color: var(--gray-600);
-            display: inline-block;
-            max-width: 130px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            vertical-align: middle;
         }
-        th.col-title, td.col-title { width: 45%; }
-        th.col-category, td.col-category { width: 12%; white-space: nowrap; }
-        th.col-source, td.col-source { width: 14%; max-width: 140px; white-space: nowrap; }
-        th.col-published, td.col-published { width: 11%; white-space: nowrap; }
-        th.col-status, td.col-status { width: 8%; white-space: nowrap; }
-        th.col-actions, td.col-actions { width: 10%; white-space: nowrap; text-align: right; }
         .date-text {
             font-size: 13px;
             color: var(--gray-500);
@@ -776,14 +763,13 @@
             <div class="results-header">
                 <div class="results-info"><h3>Latest News Articles</h3><span id="resultsCount">Loading news...</span></div>
                 <div class="results-actions">
-                    <button id="exportCsvBtn" title="Export current results as CSV"><i class="fas fa-file-csv"></i> Export CSV</button>
-                    <button id="exportJsonBtn" title="Export current results as JSON"><i class="fas fa-file-code"></i> Export JSON</button>
+                    <button id="exportBtn"><i class="fas fa-download"></i> Export</button>
                     <button id="refreshBtn"><i class="fas fa-sync-alt"></i> Refresh</button>
                 </div>
             </div>
             <div class="table-wrapper">
                 <table>
-                    <thead><tr><th class="col-title">Title</th><th class="col-category">Category</th><th class="col-source">Source</th><th class="col-published">Published</th><th class="col-status">Status</th><th class="col-actions">Actions</th></tr></thead>
+                    <thead><tr><th>Title</th><th>Category</th><th>Source</th><th>Published</th><th>Status</th><th>Actions</th></tr></thead>
                     <tbody id="newsTableBody"></tbody>
                 </table>
             </div>
@@ -820,6 +806,13 @@
     const pageSize = 10;
     let currentFilters = { category: 'all', source: 'all', date: 'all' };
     let isSearchMode = false;
+
+    // Load saved articles from Local Storage
+    let savedArticles = new Set(JSON.parse(localStorage.getItem('savedNewsArticles') || '[]'));
+
+    function saveToLocalStorage() {
+        localStorage.setItem('savedNewsArticles', JSON.stringify(Array.from(savedArticles)));
+    }
 
     function showToast(message, type = 'info') {
         const container = document.getElementById('toastContainer');
@@ -1032,7 +1025,7 @@
             const category = typeof a.category === 'string' ?
                 a.category.charAt(0).toUpperCase() + a.category.slice(1) :
                 'General';
-            const source = window.ExportManager ? ExportManager.formatSource(a.source, a) : (a.source?.name || 'News Outlet');
+            const source = a.source?.name || a.author || 'Unknown';
 
             const pubDate = new Date(a.published);
             const diff = Date.now() - pubDate.getTime();
@@ -1041,26 +1034,31 @@
             const days = Math.floor(hours / 24);
             let dateStr = days ? `${days}d ago` : hours ? `${hours}h ago` : minutes ? `${minutes}m ago` : 'Just now';
 
-            const status = window.ExportManager ? ExportManager.formatStatus(a) : (a.status || 'Published');
-            const statusColor = (status === 'Featured' || status === 'Breaking') ? 'warning' : 'success';
+            const statuses = ['Published', 'Published', 'Published', 'Featured'];
+            const status = statuses[Math.floor(Math.random() * statuses.length)];
+            const statusColor = status === 'Featured' ? 'warning' : 'success';
+
+            // Check if article is saved
+            const isSaved = savedArticles.has(title);
+            const bookmarkClass = isSaved ? 'fas fa-bookmark' : 'far fa-bookmark';
 
             html += `
                 <tr>
-                    <td class="col-title">
+                    <td>
                         <div class="article-title">
                             <i class="fas fa-file-alt" style="color:var(--gray-400);margin-right:8px;"></i>
                             <a href="${a.url || '#'}" target="_blank" title="${title}">${truncated}</a>
                         </div>
                     </td>
-                    <td class="col-category"><span class="category-tag">${category}</span></td>
-                    <td class="col-source"><span class="source-name" title="${source}">${source}</span></td>
-                    <td class="col-published"><span class="date-text">${dateStr}</span></td>
-                    <td class="col-status"><span class="status-badge ${statusColor}">${status}</span></td>
-                    <td class="col-actions">
+                    <td><span class="category-tag">${category}</span></td>
+                    <td><span class="source-name">${source}</span></td>
+                    <td><span class="date-text">${dateStr}</span></td>
+                    <td><span class="status-badge ${statusColor}">${status}</span></td>
+                    <td>
                         <div class="action-buttons">
                             <button class="action-btn view-btn" data-url="${a.url || '#'}" title="View Article"><i class="fas fa-eye"></i></button>
-                            <button class="action-btn save-btn" data-title="${title}" title="Save Article"><i class="far fa-bookmark"></i></button>
-                            <button class="action-btn share-btn" data-title="${title}" data-url="${a.url || '#'}" title="Share"><i class="fas fa-share-alt"></i></button>
+                            <button class="action-btn save-btn" data-title="${title.replace(/"/g, '&quot;')}" title="Save Article"><i class="${bookmarkClass}"></i></button>
+                            <button class="action-btn share-btn" data-title="${title.replace(/"/g, '&quot;')}" data-url="${a.url || '#'}" title="Share"><i class="fas fa-share-alt"></i></button>
                         </div>
                     </td>
                 </tr>
@@ -1150,11 +1148,20 @@
 
         document.querySelectorAll('.save-btn').forEach(btn => {
             btn.addEventListener('click', () => {
+                const title = btn.dataset.title;
                 const icon = btn.querySelector('i');
-                icon.classList.toggle('far');
-                icon.classList.toggle('fas');
-                const saved = icon.classList.contains('fas');
-                showToast(saved ? 'Article saved!' : 'Removed from saved', 'success');
+                
+                if (savedArticles.has(title)) {
+                    savedArticles.delete(title);
+                    icon.className = 'far fa-bookmark';
+                    showToast('Removed from saved articles', 'info');
+                } else {
+                    savedArticles.add(title);
+                    icon.className = 'fas fa-bookmark';
+                    showToast('Article saved!', 'success');
+                }
+                
+                saveToLocalStorage();
             });
         });
 
@@ -1181,32 +1188,30 @@
         });
     }
 
-    function exportData(format = 'csv') {
-        if (!filteredData || !filteredData.length) {
+    function exportData() {
+        if (!filteredData.length) {
             showToast('No data to export', 'warning');
             return;
         }
 
-        const dataToExport = filteredData.slice(0, 100);
-        
-        if (window.ExportManager) {
-            const columns = [
-                { label: 'Title', key: item => item.title || '' },
-                { label: 'Category', key: item => item.category || 'General' },
-                { label: 'Source', key: item => ExportManager.formatSource(item.source, item) },
-                { label: 'Published', key: item => item.published ? (new Date(item.published).toString() !== 'Invalid Date' ? new Date(item.published).toLocaleDateString() : item.published) : '' },
-                { label: 'Status', key: item => ExportManager.formatStatus(item) },
-                { label: 'URL', key: item => item.url || '' }
-            ];
+        const headers = ['Title', 'Category', 'Source', 'Published', 'URL'];
+        const rows = filteredData.slice(0, 100).map(a => [
+            `"${(a.title || '').replace(/"/g, '""')}"`,
+            `"${(a.category || 'General').replace(/"/g, '""')}"`,
+            `"${(a.source?.name || 'Unknown').replace(/"/g, '""')}"`,
+            `"${new Date(a.published).toLocaleDateString()}"`,
+            `"${a.url || ''}"`
+        ]);
 
-            if (format === 'json') {
-                ExportManager.exportToJSON(dataToExport, 'news_dashboard_export');
-            } else {
-                ExportManager.exportToCSV(dataToExport, 'news_dashboard_export', columns);
-            }
-        } else {
-            showToast('Export manager unavailable', 'error');
-        }
+        const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `news_export_${new Date().toISOString().split('T')[0]}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast('Data exported successfully!', 'success');
     }
 
     // ---- DOM READY ----
@@ -1256,9 +1261,7 @@
             showToast('Refreshing news...', 'info');
         });
 
-        document.getElementById('exportCsvBtn')?.addEventListener('click', () => exportData('csv'));
-        document.getElementById('exportJsonBtn')?.addEventListener('click', () => exportData('json'));
-        document.getElementById('exportBtn')?.addEventListener('click', () => exportData('csv'));
+        document.getElementById('exportBtn').addEventListener('click', exportData);
 
         document.getElementById('quickSearchBtn').addEventListener('click', function() {
             document.getElementById('searchInput').focus();
