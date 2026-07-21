@@ -1,6 +1,3 @@
-
-Frontend-Layer
-
 **Daily Journal** is a front-end dashboard for searching news articles, managing keyword alerts, and monitoring coverage across multiple sources — all from a single, organized workspace. The project includes both a marketing front page and the working dashboard application.
 
 <p>
