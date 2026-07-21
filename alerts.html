@@ -1730,7 +1730,7 @@
                     const columns = [
                         { label: 'Name', key: 'name' },
                         { label: 'Category', key: 'category' },
-                        { label: 'Source', key: item => item.source === 'all' ? 'All Sources' : ExportManager.formatSource(item.source) },
+                        { label: 'Source', key: item => item.source === 'all' ? 'All Sources' : ExportManager.formatSource(item.source, item) },
                         { label: 'Keywords', key: 'keywords' },
                         { label: 'Status', key: 'status' },
                         { label: 'Triggers', key: 'triggerCount' },

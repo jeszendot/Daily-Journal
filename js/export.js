@@ -28,17 +28,46 @@ const ExportManager = {
     },
 
     /**
-     * Format news source value safely
+     * Format news source value safely, with fallback to author or URL domain
      */
-    formatSource(source) {
-        if (!source) return 'Unknown';
-        if (typeof source === 'object') {
-            return source.name || source.title || 'Unknown';
+    formatSource(source, item = null) {
+        let rawSource = '';
+
+        if (source) {
+            if (typeof source === 'object') {
+                rawSource = source.name || source.title || source.id || '';
+            } else if (typeof source === 'string') {
+                rawSource = source.trim();
+            }
         }
-        const str = String(source).trim();
-        if (typeof window.SOURCE_NAMES !== 'undefined' && window.SOURCE_NAMES[str]) {
-            return window.SOURCE_NAMES[str];
+
+        // Fallback: If source is missing or 'unknown', check item author or URL domain
+        if ((!rawSource || rawSource.toLowerCase() === 'unknown') && item) {
+            if (item.author && typeof item.author === 'string' && item.author.trim() && item.author.toLowerCase() !== 'unknown') {
+                rawSource = item.author.trim();
+            } else if (item.url && typeof item.url === 'string' && item.url.startsWith('http')) {
+                try {
+                    const host = new URL(item.url).hostname.replace(/^www\./i, '');
+                    if (host && host !== 'localhost') {
+                        const namePart = host.split('.')[0];
+                        rawSource = namePart.charAt(0).toUpperCase() + namePart.slice(1);
+                    }
+                } catch (e) {
+                    // Invalid URL
+                }
+            }
         }
+
+        if (!rawSource || rawSource.toLowerCase() === 'unknown') {
+            return 'General News';
+        }
+
+        const lower = rawSource.toLowerCase();
+
+        if (typeof window.SOURCE_NAMES !== 'undefined' && window.SOURCE_NAMES[lower]) {
+            return window.SOURCE_NAMES[lower];
+        }
+
         const defaultMap = {
             cnn: 'CNN',
             bbc: 'BBC',
@@ -47,10 +76,12 @@ const ExportManager = {
             nytimes: 'NY Times',
             guardian: 'The Guardian'
         };
-        if (defaultMap[str.toLowerCase()]) {
-            return defaultMap[str.toLowerCase()];
+
+        if (defaultMap[lower]) {
+            return defaultMap[lower];
         }
-        return str.toUpperCase();
+
+        return rawSource.charAt(0).toUpperCase() + rawSource.slice(1);
     },
 
     /**
