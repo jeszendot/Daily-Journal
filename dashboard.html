@@ -1297,9 +1297,11 @@
         document.getElementById('bellIcon').addEventListener('click', function() {
             showToast('No new notifications', 'info');
         });
-        document.getElementById('userAvatar').addEventListener('click', function() {
-            showToast('Profile', 'info');
+        
+document.getElementById('userAvatar').addEventListener('click', function() {
+            window.location.href = "profile.html";
         });
+
     });
 })();
 </script>
