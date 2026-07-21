@@ -1182,7 +1182,7 @@
             const columns = [
                 { label: 'Title', key: item => item.title || '' },
                 { label: 'Category', key: item => item.category || 'General' },
-                { label: 'Source', key: item => item.source?.name || item.source || 'Unknown' },
+                { label: 'Source', key: item => ExportManager.formatSource(item.source) },
                 { label: 'Published', key: item => item.published ? (new Date(item.published).toString() !== 'Invalid Date' ? new Date(item.published).toLocaleDateString() : item.published) : '' },
                 { label: 'Status', key: item => item.status || 'published' },
                 { label: 'Author', key: item => item.author || '' },

@@ -28,6 +28,32 @@ const ExportManager = {
     },
 
     /**
+     * Format news source value safely
+     */
+    formatSource(source) {
+        if (!source) return 'Unknown';
+        if (typeof source === 'object') {
+            return source.name || source.title || 'Unknown';
+        }
+        const str = String(source).trim();
+        if (typeof window.SOURCE_NAMES !== 'undefined' && window.SOURCE_NAMES[str]) {
+            return window.SOURCE_NAMES[str];
+        }
+        const defaultMap = {
+            cnn: 'CNN',
+            bbc: 'BBC',
+            reuters: 'Reuters',
+            ap: 'Associated Press',
+            nytimes: 'NY Times',
+            guardian: 'The Guardian'
+        };
+        if (defaultMap[str.toLowerCase()]) {
+            return defaultMap[str.toLowerCase()];
+        }
+        return str.toUpperCase();
+    },
+
+    /**
      * Export array of objects to CSV format
      * @param {Array<Object>} data - Array of records
      * @param {String} filename - Output filename without extension

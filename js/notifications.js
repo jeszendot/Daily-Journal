@@ -428,7 +428,7 @@ const NewsManager = {
             const columns = [
                 { label: 'Title', key: 'title' },
                 { label: 'Category', key: 'category' },
-                { label: 'Source', key: item => (typeof SOURCE_NAMES !== 'undefined' && SOURCE_NAMES[item.source]) ? SOURCE_NAMES[item.source] : item.source },
+                { label: 'Source', key: item => ExportManager.formatSource(item.source) },
                 { label: 'Published', key: 'published' },
                 { label: 'Status', key: 'status' },
                 { label: 'Author', key: 'author' }
