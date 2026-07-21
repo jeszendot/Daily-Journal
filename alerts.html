@@ -10,6 +10,7 @@
     
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="js/export.js"></script>
     
     <style>
         /* ============================================
@@ -1224,7 +1225,9 @@
                         <span id="totalAlerts">0</span> active alerts monitoring your topics
                     </p>
                 </div>
-                <div class="actions">
+                <div class="actions" style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                    <button class="filter-btn outline" id="exportCsvBtn" title="Export Alerts as CSV"><i class="fas fa-file-csv"></i> Export CSV</button>
+                    <button class="filter-btn outline" id="exportJsonBtn" title="Export Alerts as JSON"><i class="fas fa-file-code"></i> Export JSON</button>
                     <button class="create-alert-btn" id="createAlertBtn">
                         <i class="fas fa-plus"></i> Create Alert
                     </button>
@@ -1717,7 +1720,37 @@
                 }
             },
 
+            exportData(format = 'csv') {
+                if (!this.alerts || !this.alerts.length) {
+                    ToastManager.warning('No Alerts', 'No active alerts available to export');
+                    return;
+                }
+
+                if (window.ExportManager) {
+                    const columns = [
+                        { label: 'Name', key: 'name' },
+                        { label: 'Category', key: 'category' },
+                        { label: 'Source', key: item => item.source === 'all' ? 'All Sources' : ExportManager.formatSource(item.source, item) },
+                        { label: 'Keywords', key: 'keywords' },
+                        { label: 'Status', key: 'status' },
+                        { label: 'Triggers', key: 'triggerCount' },
+                        { label: 'Created At', key: item => this.formatDate(item.createdAt) }
+                    ];
+
+                    if (format === 'json') {
+                        ExportManager.exportToJSON(this.alerts, 'news_alerts_export');
+                    } else {
+                        ExportManager.exportToCSV(this.alerts, 'news_alerts_export', columns);
+                    }
+                } else {
+                    ToastManager.error('Error', 'Export manager component missing');
+                }
+            },
+
             bindEvents() {
+                document.getElementById('exportCsvBtn')?.addEventListener('click', () => this.exportData('csv'));
+                document.getElementById('exportJsonBtn')?.addEventListener('click', () => this.exportData('json'));
+
                 document.getElementById('createAlertBtn').addEventListener('click', () => {
                     this.showCreateAlert();
                 });
